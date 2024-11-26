@@ -1,0 +1,121 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id              String   @id @default(uuid())
+    name            String?
+    email           String?  @unique
+    image           String?
+    nickname        String?  @unique
+    shippingAddress Json?
+    billingAddress  Json?
+    createdAt       DateTime @default(now())
+
+    // relations
+    savedArtworks  Artwork[]       @relation("UserSavedArtworks")
+    configurations Configuration[]
+    cart           Cart[]
+    orders         Order?
+}
+
+model Artwork {
+    id             String          @id @default(uuid())
+    title          String
+    imageURL       String
+    pieceDate      DateTime
+    size           Size            @default(SMALL)
+    style          Style[]
+    medium         Medium          @default(PEN)
+    price          Decimal         @db.Decimal(10, 2)
+    active         Boolean         @default(false)
+    // relations
+    savedBy        User[]          @relation("UserSavedArtworks")
+    configurations Configuration[] @relation("ArtworkConfigurations")
+    cart           Cart[]
+    orderItems     OrderItem[]
+}
+
+model Configuration {
+    id              String    @id @default(uuid())
+    name            String
+    artworkPosition Json
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+    // relations
+    userId          String
+    user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    artworks        Artwork[] @relation("ArtworkConfigurations")
+}
+
+model Cart {
+    id            String   @id @default(uuid())
+    configuration Json
+    quantity      Int
+    priceAtTime   Decimal  @db.Decimal(10, 2)
+    addedAt       DateTime @default(now())
+    // relations
+    userId        String
+    user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    artworkId     String
+    artwork       Artwork  @relation(fields: [artworkId], references: [id])
+}
+
+model Order {
+    id              String      @id @default(uuid())
+    status          OrderStatus @default(PENDING)
+    totalAmount     Decimal     @db.Decimal(10, 2)
+    shippingAddress Json
+    shippingCost    Decimal     @db.Decimal(10, 2)
+    paymentDetails  Json
+    orderDate       DateTime    @default(now())
+    // relations
+    userId          String      @unique
+    user            User        @relation(fields: [userId], references: [id])
+    orderItems      OrderItem[]
+}
+
+model OrderItem {
+    id            String  @id @default(uuid())
+    configuration Json
+    quantity      Int
+    priceAtTime   Decimal @db.Decimal(10, 2)
+    // relations
+    orderId       String
+    order         Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    artworkId     String
+    artwork       Artwork @relation(fields: [artworkId], references: [id])
+}
+
+enum Size {
+    XS
+    SMALL
+    MEDIUM
+    LARGE
+}
+
+enum Medium {
+    PEN
+    PENCIL
+    MARKER
+}
+
+enum OrderStatus {
+    PENDING
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+}
+
+enum Style {
+    REALM01
+    REALM02
+    REALM03
+    REALM04
+}
