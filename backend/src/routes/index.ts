@@ -10,10 +10,22 @@ import multer from "multer";
 import { testAWSConnection, uploadToS3 } from "../services/s3";
 import { isAdmin } from "../middleware/isAdmin";
 import { prisma } from "../config/prisma";
+import imageRoutes from "./getImage";
+import artworkRoutes from "./getArtworksMetadata";
+import express from "express";
+import cors from "cors";
 
 const router = Router();
 // Configure multer for file uploads (5MB limit)
 const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 } });
+
+// Add cors middleware before your routes
+router.use(
+  cors({
+    origin: "http://localhost:3000", // Your frontend URL
+    credentials: true,
+  })
+);
 
 // PROTECTED ROUTE: Get user details
 router.get("/protected", requireAuth(), async (req: Request, res: Response) => {
@@ -59,9 +71,9 @@ router.get("/test-aws", async (req: Request, res: Response) => {
 // UPLOAD ROUTE: Handle file uploads ADMIN ONLY!!!
 router.post(
   "/admin/upload",
-  requireAuth(),
-  isAdmin as RequestHandler,
-  upload.single("image"),
+  requireAuth(), // check if user is logged in
+  isAdmin as RequestHandler, // check if user is admin
+  upload.single("image"), // multer processes the file upload
   (async (req, res) => {
     try {
       if (!req.file) {
@@ -114,5 +126,9 @@ router.post(
     }
   }) as RequestHandler
 );
+// api endpoint that serves image data
+router.use("/images", imageRoutes); // .use() creates a route prefix - tells express where to look for handlers - creates API endpoint
+
+router.use("/artworks", artworkRoutes);
 
 export default router;

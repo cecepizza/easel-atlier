@@ -28,6 +28,13 @@ export const testAWSConnection = async () => {
   return { bucketExists, bucketName: process.env.AWS_BUCKET_NAME };
 };
 
+const sanitizeFileName = (filename: string) => {
+  return filename
+    .replace(/[^a-zA-Z0-9-_.]/g, "-") // Replace any non-alphanumeric chars with dash
+    .replace(/\s+/g, "-") // Replace spaces with dash
+    .toLowerCase(); // Convert to lowercase
+};
+
 // Function to upload and process images
 export const uploadToS3 = async (file: Express.Multer.File) => {
   // Process image: convert to WebP format with 90% quality
@@ -46,7 +53,9 @@ export const uploadToS3 = async (file: Express.Multer.File) => {
   // Create unique filename with timestamp
   const uploadParams = {
     Bucket: process.env.AWS_BUCKET_NAME!,
-    Key: `images/${Date.now()}-${file.originalname.split(".")[0]}.webp`, // Create unique filename
+    Key: `images/${Date.now()}-${sanitizeFileName(
+      file.originalname.split(".")[0]
+    )}.webp`,
     Body: processedImage,
     ContentType: "image/webp", // when files retrieved - this header tells browser how to treat image
     ServerSideEncryption: ServerSideEncryption.AES256, // Use S3-managed keys instead of KMS
