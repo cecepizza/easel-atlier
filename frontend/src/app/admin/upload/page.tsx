@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Size, Medium, Style } from "../../../store/useArtworkStore";
+import envConfig from "../../../env.config";
 
 export default function AdminUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -27,7 +28,7 @@ export default function AdminUpload() {
     form.append("pieceDate", new Date().toISOString());
 
     try {
-      const response = await fetch("http://localhost:8000/admin/upload", {
+      const response = await fetch(`${envConfig.apiUrl}/admin/upload`, {
         method: "POST",
         body: form,
         credentials: "include",

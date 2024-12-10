@@ -38,7 +38,7 @@ router.get("/protected", requireAuth(), async (req: Request, res: Response) => {
 
 // TEST ROUTE: Verify auth is working
 router.get("/test-auth", requireAuth(), (req: Request, res: Response) => {
-  // log headres to see what we are getting
+  // log headers to see what we are getting
   console.log("Request Headers:", req.headers);
   const { auth } = req as unknown as { auth: { userId: string } };
   res.json({
@@ -112,7 +112,7 @@ router.post(
 
       res.json({
         success: true,
-        message: "File uploaded successfully",
+        message: "db upload success",
         artwork, // Include the created artwork in response
         key,
       });
