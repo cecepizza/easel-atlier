@@ -10,6 +10,8 @@ dotenv.config();
 const app = express();
 const port = 8000;
 
+app.use(express.json()); // parse incoming JSON requests
+
 // Add CORS middleware
 app.use(
   cors({

@@ -1,3 +1,4 @@
+// main routes file
 import {
   Router,
   Request,
@@ -12,6 +13,7 @@ import { isAdmin } from "../middleware/isAdmin";
 import { prisma } from "../config/prisma";
 import imageRoutes from "./getImage";
 import artworkRoutes from "./getArtworksMetadata";
+import checkoutRoutes from "./checkout";
 import express from "express";
 import cors from "cors";
 
@@ -130,5 +132,8 @@ router.post(
 router.use("/images", imageRoutes); // .use() creates a route prefix - tells express where to look for handlers - creates API endpoint
 
 router.use("/artworks", artworkRoutes);
+
+// checkout routes for frontend
+router.use("/checkout", checkoutRoutes);
 
 export default router;
