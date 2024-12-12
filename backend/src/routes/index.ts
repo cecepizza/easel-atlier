@@ -1,3 +1,4 @@
+// main routes file
 import {
   Router,
   Request,
@@ -12,6 +13,7 @@ import { isAdmin } from "../middleware/isAdmin";
 import { prisma } from "../config/prisma";
 import imageRoutes from "./getImage";
 import artworkRoutes from "./getArtworksMetadata";
+import checkoutRoutes from "./checkout";
 import express from "express";
 import cors from "cors";
 
@@ -38,7 +40,7 @@ router.get("/protected", requireAuth(), async (req: Request, res: Response) => {
 
 // TEST ROUTE: Verify auth is working
 router.get("/test-auth", requireAuth(), (req: Request, res: Response) => {
-  // log headres to see what we are getting
+  // log headers to see what we are getting
   console.log("Request Headers:", req.headers);
   const { auth } = req as unknown as { auth: { userId: string } };
   res.json({
@@ -112,7 +114,7 @@ router.post(
 
       res.json({
         success: true,
-        message: "File uploaded successfully",
+        message: "db upload success",
         artwork, // Include the created artwork in response
         key,
       });
@@ -130,5 +132,8 @@ router.post(
 router.use("/images", imageRoutes); // .use() creates a route prefix - tells express where to look for handlers - creates API endpoint
 
 router.use("/artworks", artworkRoutes);
+
+// checkout routes for frontend
+router.use("/checkout", checkoutRoutes);
 
 export default router;

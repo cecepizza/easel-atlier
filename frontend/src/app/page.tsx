@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { Artwork } from "../store/useArtworkStore";
-
+import envConfig from "../env.config";
 export default function Home() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ export default function Home() {
     const fetchArtworks = async () => {
       try {
         console.log("Fetching artworks...");
-        const response = await fetch("http://localhost:8000/artworks");
+        const response = await fetch(`${envConfig.apiUrl}/artworks`);
         const data = await response.json();
         console.log("Received artworks:", data);
         setArtworks(data);
@@ -29,12 +29,11 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold text-center mb-8">Art Gallery</h1>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {artworks.map((artwork) => (
           <div key={artwork.id} className="border rounded-lg p-4">
             <img
-              src={`http://localhost:8000/images/${encodeURIComponent(
+              src={`${envConfig.apiUrl}/images/${encodeURIComponent(
                 artwork.imageURL
               )}`}
               alt={artwork.title}
