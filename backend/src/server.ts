@@ -1,59 +1,33 @@
 import dotenv from "dotenv";
+import express from "express";
+import { initClerk } from "./config/clerk";
+import routes from "./routes";
+import cors from "cors";
 
-// Load environment variables FIRST
+// Load environment variables FIRST (must happen before any other code)
 dotenv.config();
-
-import express, { Request, Response } from "express";
-import { clerkMiddleware, clerkClient, requireAuth } from "@clerk/express";
 
 const app = express();
 const port = 8000;
 
-// Convert NEXT_PUBLIC key
-const publishableKey =
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
-  process.env.CLERK_PUBLISHABLE_KEY;
-const secretKey = process.env.CLERK_SECRET_KEY;
+app.use(express.json()); // parse incoming JSON requests
 
-// Set the converted key
-process.env.CLERK_PUBLISHABLE_KEY = publishableKey;
+// Add CORS middleware
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Your frontend URL
+    credentials: true,
+  })
+);
 
-// vertify required environment variable are present
-if (!publishableKey || !secretKey) {
-  console.error("❌ Missing Clerk keys:", {
-    hasPublishableKey: !!publishableKey,
-    hasSecretKey: !!secretKey,
-  });
-  process.exit(1);
-}
-console.log("✅ Clerk keys loaded successfully");
+// Initialize Clerk middleware for auth
+app.use(initClerk());
+// Add all routes from routes/index.ts
+app.use(routes);
 
-app.use(clerkMiddleware());
+// API enpoint
 
-// on public routes no auth is required
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-
-// protected routes require auth
-app.get("/protected", requireAuth(), async (req: Request, res: Response) => {
-  // double assertion to safetly access auth by clerk
-  const { auth } = req as unknown as { auth: { userId: string } };
-  // fetch user details
-  const user = await clerkClient.users.getUser(auth.userId);
-  res.json({ user });
-});
-
-// test auth route
-app.get("/test-auth", requireAuth(), (req: Request, res: Response) => {
-  const { auth } = req as unknown as { auth: { userId: string } };
-  res.json({
-    message: "Auth is working!",
-    userId: auth.userId,
-  });
-});
-
-// start server
+// Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
