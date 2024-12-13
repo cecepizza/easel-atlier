@@ -39,6 +39,7 @@ type ArtworkStore = {
 
   removeArtwork: (artworkId: string) => void;
   clearSelection: () => void;
+  clearCart: () => void;
 };
 
 export const useArtworkStore = create(
@@ -64,6 +65,7 @@ export const useArtworkStore = create(
           ),
         })),
       clearSelection: () => set({ selectedArtwork: [] }),
+      clearCart: () => set({ selectedArtwork: [] }),
     }),
     {
       name: "artwork-storage",
