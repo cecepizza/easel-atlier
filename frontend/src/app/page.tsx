@@ -2,9 +2,14 @@
 import { useEffect, useState } from "react";
 import type { Artwork } from "../store/useArtworkStore";
 import envConfig from "../env.config";
+import ArtworkCard from "../components/artwork/artworkCard";
+import ArtworkModal from "../components/artwork/artworkModal";
+
 export default function Home() {
-  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [artworks, setArtworks] = useState<Artwork[]>([]); //used to display the gallery/catalog
   const [loading, setLoading] = useState(true);
+  const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null); // used to display the selected artwork in the checkout page
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -24,32 +29,32 @@ export default function Home() {
     fetchArtworks();
   }, []);
 
+  const handleArtworkClick = (artwork: Artwork) => {
+    setSelectedArtwork(artwork);
+    setIsModalOpen(true);
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold text-center mb-8">Art Gallery</h1>
+      {/* grid of artwork cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {artworks.map((artwork) => (
-          <div key={artwork.id} className="border rounded-lg p-4">
-            <img
-              src={`${envConfig.apiUrl}/images/${encodeURIComponent(
-                artwork.imageURL
-              )}`}
-              alt={artwork.title}
-              className="w-full h-48 object-cover rounded"
-              onError={(e) => {
-                console.error(`Failed to load image: ${artwork.imageURL}`);
-                e.currentTarget.style.display = "none";
-              }}
-            />
-            <h2 className="font-bold mt-2">{artwork.title}</h2>
-            <p>${artwork.price}</p>
-            <p>Style: {artwork.style.join(", ")}</p>
-            <p>Medium: {artwork.medium}</p>
-          </div>
+          <ArtworkCard
+            key={artwork.id}
+            artwork={artwork}
+            onClick={handleArtworkClick}
+          />
         ))}
       </div>
+      {/* artwork modal popup */}
+      <ArtworkModal
+        artwork={selectedArtwork}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

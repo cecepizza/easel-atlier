@@ -22,6 +22,9 @@ export default function RootLayout({
     <ClerkProvider>
       <UserProvider>
         <html lang="en">
+          <head>
+            <script src="https://js.stripe.com/v3/"></script>
+          </head>
           <body className={`${inter.className} min-h-screen flex flex-col`}>
             <Navbar />
             <main className="flex-grow container mx-auto px-4 py-8">

@@ -7,35 +7,39 @@ const router = express.Router();
 // create API endpoint for checkout session for frontend call
 router.post("/create-checkout-session", async (req, res) => {
   try {
-    console.log("Starting checkout session creation...");
-    console.log("Stripe key exists:", !!process.env.STRIPE_SECRET_KEY);
-    // create an endpoint on your server for the checkout session
+    // 1. Extract and validate product details
+    const { title, price, imageURL } = req.body;
+    const unitAmount = Math.round(Number(price) * 100); // Convert price to number and to cents
+
+    // 2. Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      // define the product to sell
       line_items: [
         {
-          price: req.body.priceId,
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: title,
+              images: [imageURL],
+            },
+            unit_amount: unitAmount,
+          },
           quantity: 1,
         },
       ],
-      // chose a mode - different transcation types
       mode: "payment",
-      success_url: `${process.env.DOMAIN}/success`,
-      cancel_url: `${process.env.DOMAIN}/cancel`,
+      success_url: `${process.env.DOMAIN}/success`, // Post-payment success page
+      cancel_url: `${process.env.DOMAIN}/cancel`, // Payment cancellation page
     });
-    console.log("Session created successfully:", session.id);
 
+    // 3. Return session ID to frontend
     res.json({ sessionId: session.id });
   } catch (error) {
-    console.error("Stripe error:", error);
-
-    res
-      .status(500)
-      .json({
-        error: "Failed to create checkout session",
-        details: error instanceof Error ? error.message : String(error),
-      });
+    console.error("5. Stripe error details:", error);
+    res.status(500).json({
+      error: "Failed to create checkout session",
+      details: error instanceof Error ? error.message : String(error),
+    });
   }
 });
 
