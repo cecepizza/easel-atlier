@@ -46,9 +46,17 @@ export const useArtworkStore = create(
     (set) => ({
       selectedArtwork: [],
       addArtwork: (artwork) =>
-        set((state) => ({
-          selectedArtwork: [...state.selectedArtwork, artwork],
-        })),
+        set((state) => {
+          const exists = state.selectedArtwork.some(
+            (item) => item.id === artwork.id
+          );
+
+          if (exists) return state;
+
+          return {
+            selectedArtwork: [...state.selectedArtwork, artwork],
+          };
+        }),
       removeArtwork: (artworkId) =>
         set((state) => ({
           selectedArtwork: state.selectedArtwork.filter(
