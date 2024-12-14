@@ -13,13 +13,18 @@ export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
       onClick={() => onClick(artwork)}
     >
       <img
-        src={`${envConfig.apiUrl}/images/${encodeURIComponent(
-          artwork.imageURL
-        )}`}
+        src={(() => {
+          const url = `${envConfig.apiUrl}/images/${encodeURIComponent(
+            artwork.imageURL
+          )}`;
+          console.log("Image URL:", url);
+          return url;
+        })()}
         alt={artwork.title}
         className="w-full h-48 object-cover rounded"
         onError={(e) => {
-          console.error("failed to load image: ${artwork.imageURL}");
+          console.error(`failed to load image: ${artwork.imageURL}`);
+          console.log(envConfig.apiUrl + "/images/" + encodeURIComponent());
           e.currentTarget.style.display = "none";
         }}
       />

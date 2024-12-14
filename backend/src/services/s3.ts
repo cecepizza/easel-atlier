@@ -6,6 +6,8 @@ import {
 } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 
+console.log("process.env.AWS_ACCESS_KEY_ID: ", process.env.AWS_ACCESS_KEY_ID);
+
 // Initialize S3 client with AWS credentials from env vars
 export const s3Client = new S3Client({
   region: process.env.AWS_REGION,
@@ -17,6 +19,10 @@ export const s3Client = new S3Client({
 
 // Function to test AWS connection and find our bucket
 export const testAWSConnection = async () => {
+  console.log({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  });
   // Create command to list all buckets
   const command = new ListBucketsCommand({});
   // Send command to AWS
