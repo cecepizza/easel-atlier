@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 // getObjectCommand is an aws sdk command for retrieving objects from s3
 import { s3Client } from "../services/s3";
 
@@ -11,13 +11,18 @@ router.get("/:key", async (req: Request, res: Response) => {
   // router.get("/:key") is to get one artwork
   try {
     const { key } = req.params;
+    console.log("key: ", key, process.env.AWS_BUCKET_NAME);
+
     // first we create a command to get bucket and key from s3
     const command = new GetObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME!,
       Key: key,
     });
+    console.log("command: ", command);
     // then we send the command to s3 await aws to return the response
     const response = await s3Client.send(command); // response contains the file data and metadata (ContentType)
+
+    console.log("response: ", response);
 
     // set appropriate headers for the response
     res.set("Content-Type", response.ContentType); // tells browser what type of file it is
@@ -37,6 +42,7 @@ router.get("/:key", async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Error serving image",
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 });
