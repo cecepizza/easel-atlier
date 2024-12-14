@@ -35,45 +35,89 @@ export default function ArtworkModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="p-6 space-y-4">
-        {/* close button */}
+      <div className="bg-[#1B1E23] text-white p-8 max-w-4xl w-full mx-auto rounded-xl">
+        {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
         >
-          x
-        </button>
-        {/* artwork content  */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="relative">
-            <img
-              src={`${envConfig.apiUrl}/images/${encodeURIComponent(
-                artwork.imageURL
-              )}`}
-              alt={artwork.title}
-              className="w-full h-[400px] object-contain rounded-lg"
-              onError={(e) => {
-                e.currentTarget.src = "/placeholder.jpg"; // optional fallback image
-              }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
             />
+          </svg>
+        </button>
+
+        {/* Artwork content */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Image container */}
+          <div className="relative">
+            <div className="aspect-square overflow-hidden rounded-lg bg-black/20">
+              <img
+                src={`${envConfig.apiUrl}/images/${encodeURIComponent(
+                  artwork.imageURL
+                )}`}
+                alt={artwork.title}
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.jpg";
+                }}
+              />
+            </div>
           </div>
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold">{artwork.title}</h2>
-            <div className="space-y-2">
-              <p className="text-xl font-semibold">${artwork.price}</p>
-              <p>Size: {artwork.size}</p>
-              <p>Medium: {artwork.medium}</p>
-              <p>Style: {artwork.style.join(", ")}</p>
-              <p>Date: {artwork.pieceDate}</p>
+
+          {/* Details container */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold gradient-text mb-2">
+                {artwork.title}
+              </h2>
+              <div className="accent-bar accent-1 w-24"></div>
             </div>
 
-            {/* We'll add the AddToCart button here later */}
+            <div className="space-y-4 text-gray-300">
+              <p className="text-2xl font-semibold text-white">
+                ${artwork.price}
+              </p>
+              <div className="space-y-2">
+                <p className="flex justify-between">
+                  <span className="text-gray-400">Size</span>
+                  <span>{artwork.size}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-400">Medium</span>
+                  <span>{artwork.medium}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-400">Style</span>
+                  <span>{artwork.style.join(", ")}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-400">Date</span>
+                  <span>{artwork.pieceDate}</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Add to Cart button */}
             <button
-              // 3- connect to button
               onClick={handleAddToCart}
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+              className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
+                status === "success"
+                  ? "bg-green-500 hover:bg-green-600"
+                  : "bg-gradient-to-r from-[#4CC9F0] to-[#4895EF] hover:from-[#4895EF] hover:to-[#4CC9F0]"
+              }`}
             >
-              Add to Cart
+              {status === "success" ? "Added to Cart!" : "Add to Cart"}
             </button>
           </div>
         </div>

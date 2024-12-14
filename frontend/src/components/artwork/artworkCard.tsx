@@ -9,7 +9,7 @@ interface ArtworkCardProps {
 export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
   return (
     <div
-      className="border rounded-lg p-4 cursor-pointer transition-transform hover:scale-105"
+      className="p-2 cursor-pointer transition-transform hover:scale-105"
       onClick={() => onClick(artwork)}
     >
       <img
@@ -21,7 +21,7 @@ export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
           return url;
         })()}
         alt={artwork.title}
-        className="w-full h-48 object-cover rounded"
+        className="w-full object-contain"
         onError={(e) => {
           console.error(`failed to load image: ${artwork.imageURL}`);
           console.log(envConfig.apiUrl + "/images/" + encodeURIComponent());
@@ -29,8 +29,8 @@ export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
         }}
       />
       <div className="mt-2 space-y-1">
-        <h2 className="font-bold">{artwork.title}</h2>
-        <p className="text-sm text-gray-500">${artwork.price}</p>
+        {/* <h2 className="font-bold">{artwork.title}</h2>
+        <p className="text-sm text-gray-500">${artwork.price}</p> */}
       </div>
     </div>
   );
