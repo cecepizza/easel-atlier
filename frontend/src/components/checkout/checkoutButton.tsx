@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import { Button } from "../ui/button";
-import { loadStripe } from "@stripe/stripe-js";
 import { Artwork } from "../../store/useArtworkStore";
+import { loadStripe } from "@stripe/stripe-js";
 
 // Initialize Stripe client-side ONCE outside component
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-// tells typescript : " hey this component needs an artwork object that matches the artwork type in the store "
 interface CheckoutButtonProps {
-  artwork: Artwork; // help catch errors if you try to use component without providing required artwork data
+  artwork: Artwork;
 }
 
 export default function CheckoutButton({ artwork }: CheckoutButtonProps) {
-  // track the button's current status
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
 
   const handleCheckout = async () => {
@@ -58,16 +55,20 @@ export default function CheckoutButton({ artwork }: CheckoutButtonProps) {
   };
 
   return (
-    <Button
+    <button
       onClick={handleCheckout}
-      variant={status === "error" ? "destructive" : "default"}
       disabled={status === "loading"}
+      className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 
+        ${
+          status === "error"
+            ? "bg-red-500 hover:bg-red-600"
+            : "bg-gradient-to-r from-[#4CC9F0] to-[#4895EF]"
+        }`}
     >
       {status === "loading" ? "scheming..." : "purchase"}
-    </Button>
+    </button>
   );
 }
-
 /* flow of STRIPE events 
 
 1 - user clicks checkout button
