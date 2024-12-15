@@ -4,21 +4,21 @@ import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
-  useCursor,
-  Image,
-  Text,
-  Environment,
-  OrbitControls,
-  CameraControls,
-  KeyboardControls,
+  useCursor, // hook to handle cursor state
+  Image, // display image in 3d space
+  Text, // 3d text
+  Environment, // environment settings
+  OrbitControls, // orbit controls
+  CameraControls, // camera controls
+  KeyboardControls, // keyboard controls
 } from "@react-three/drei";
 import { useRoute, useLocation } from "wouter";
-import { easing } from "maath";
-import getUuid from "uuid-by-string";
+import { easing } from "maath"; // animation easing
+import getUuid from "uuid-by-string"; // generate unique ids from strings
 import { MeshBasicMaterial } from "three";
 import envConfig from "../env.config";
 
-const GOLDENRATIO = 1.61803398875;
+const GOLDENRATIO = 1.61803398875; // golden ratio for aesthetic purposes
 
 const pexel = (id: string) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`;
@@ -30,7 +30,7 @@ const mockImages = [
   { position: [0.8, 0, -0.6], rotation: [0, 0, 0], url: pexel("310452") },
   // Left
   {
-    position: [-1.75, 0, 0.25],
+    position: [-1.75, 0, 0.5],
     rotation: [0, Math.PI / 2.5, 0],
     url: pexel("327482"),
   },
@@ -62,16 +62,18 @@ const mockImages = [
   },
 ];
 
+// fetch and manage images
 const useImages = () => {
   const [images, setImages] = useState(mockImages);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // fetch artworks from API
     const fetchArtworks = async () => {
       try {
         const response = await fetch(`${envConfig.apiUrl}/artworks`);
         const artworks = await response.json();
-        // Transform artworks into the expected format
+        // Transform API data to match our image format
         const artworkImages = artworks.map((artwork: any, index: number) => ({
           position: mockImages[index % mockImages.length].position,
           rotation: mockImages[index % mockImages.length].rotation,
@@ -103,6 +105,7 @@ const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
 
+  // handle window resize
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
@@ -119,18 +122,20 @@ const App = () => {
     <div className="h-screen w-full">
       <Canvas
         className="h-[${height}px] w-[${width}px]"
-        dpr={[1, 1.5]}
-        camera={{ fov: 70, position: [0, 2, 15] }}
+        dpr={[1, 1.5]} // device pixel ratio settings
+        camera={{ fov: 70, position: [0, 2, 15] }} // initial camera setup
       >
-        <color attach="background" args={["#191920"]} />
-        <fog attach="fog" args={["#191920", 0, 15]} />
-        <group position={[0, -0.5, 0]}>
+        <color attach="background" args={["#191920"]} /> // scene background
+        color
+        <fog attach="fog" args={["#191920", 0, 15]} /> // fog settings
+        <group position={[0, -1.5, 0]}>
           <Frames images={images} />
           <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[50, 50]} />
+            <planeGeometry args={[70, 100]} /> // plane geometry for the
+            background
           </mesh>
         </group>
-        <Environment preset="city" />
+        <Environment preset="city" /> // environment lighting
       </Canvas>
     </div>
   );
@@ -138,17 +143,19 @@ const App = () => {
 
 export default App;
 
+// frames component manages the collection of image frames
 function Frames({
   images,
-  q = new THREE.Quaternion(),
-  p = new THREE.Vector3(),
+  q = new THREE.Quaternion(), // for rotation
+  p = new THREE.Vector3(), // for position
 }) {
   const ref = useRef<THREE.Group>(null);
   const clicked = useRef<THREE.Object3D | null>(null);
-  const [, params] = useRoute("/item/:id");
+  const [, params] = useRoute("/item/:id"); // get route parameters
   console.log(params);
-  const [, setLocation] = useLocation();
+  const [, setLocation] = useLocation(); // navigation handler
 
+  // handle frame selection and camera movement
   useEffect(() => {
     if (!ref.current) return;
     if (params?.id) {
@@ -156,9 +163,12 @@ function Frames({
     } else {
       clicked.current = null;
     }
+    // update camera position when frame is selected
     if (clicked.current) {
       clicked.current.parent?.updateWorldMatrix(true, true);
-      clicked.current.parent?.localToWorld(p.set(0, GOLDENRATIO / 2, 1.25));
+      clicked.current.parent?.localToWorld(
+        p.set(0, GOLDENRATIO / 2 + 0.6, 1.5)
+      );
       clicked.current.parent?.getWorldQuaternion(q);
     } else {
       p.set(0, 0, 5.5);
@@ -166,6 +176,7 @@ function Frames({
     }
   });
 
+  // animate camera movement
   useFrame((state, dt) => {
     easing.damp3(state.camera.position, p, 0.4, dt);
     easing.dampQ(state.camera.quaternion, q, 0.4, dt);
@@ -191,35 +202,46 @@ function Frames({
   );
 }
 
+// individual frame component
 function Frame({ url, c = new THREE.Color(), ...props }) {
   const image = useRef<THREE.Mesh>(null);
   const frame = useRef<THREE.Mesh>(null);
+  const group = useRef<THREE.Group>(null);
   const [, params] = useRoute("/item/:id");
   const [hovered, hover] = useState(false);
-  const [rnd] = useState(() => Math.random());
+  const [rnd] = useState(() => Math.random()); // random value for animations
   const name = getUuid(url);
-  console.log("Name is ", name);
   const isActive = params?.id === name;
-  useCursor(hovered);
+  useCursor(hovered); // change cursor when hovered
 
+  // handle frame animations
   useFrame((state, dt) => {
-    if (!image.current || !frame.current) return;
+    if (!image.current || !frame.current || !group.current) return;
 
+    // floating animation
+    const floatOffset = Math.sin(state.clock.elapsedTime + rnd * 2000) * 0.1;
+    group.current.position.y = floatOffset;
+
+    // image zoom animation
     image.current.material.zoom =
       2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2;
+
+    // scale animaton on hover
     easing.damp3(
       image.current.scale,
       [
-        0.85 * (!isActive && hovered ? 0.85 : 1),
-        0.9 * (!isActive && hovered ? 0.905 : 1),
+        1 * (!isActive && hovered ? 0.85 : 1),
+        1 * (!isActive && hovered ? 0.75 : 1),
         1,
       ],
       0.1,
       dt
     );
+
+    // frame color animation
     easing.dampC(
       frame.current.material.color,
-      hovered ? "orange" : "white",
+      hovered ? "black" : "white",
       0.1,
       dt
     );
@@ -227,31 +249,35 @@ function Frame({ url, c = new THREE.Color(), ...props }) {
 
   return (
     // this group is the parent of the mesh which we are using for identification
-    <group {...props}>
+    <group ref={group} {...props}>
       <mesh
         // this name is used as a unique identifier to focus and manipulate things
         name={name}
         onPointerOver={(e) => (e.stopPropagation(), hover(true))}
         onPointerOut={() => hover(false)}
         scale={[1, GOLDENRATIO, 0.05]}
-        position={[0, GOLDENRATIO / 2, 0]}
+        position={[0, GOLDENRATIO / 1, 0]}
       >
         <boxGeometry />
         <meshStandardMaterial
-          color="#151515"
-          metalness={0.5}
-          roughness={0.5}
+          color="#lightgray"
+          metalness={1.5}
+          roughness={2.5}
           envMapIntensity={2}
         />
+
+        {/* frame border */}
         <mesh
           ref={frame}
           raycast={() => null}
           scale={[0.9, 0.93, 0.9]}
-          position={[0, 0, 0.2]}
+          //   position={[0, 0, 0.0]}
         >
           <boxGeometry />
-          <meshBasicMaterial toneMapped={false} fog={false} />
+          <meshBasicMaterial color="white" toneMapped={false} fog={false} />
         </mesh>
+
+        {/* image mesh */}
         <Image
           raycast={() => null}
           ref={image}
@@ -259,6 +285,7 @@ function Frame({ url, c = new THREE.Color(), ...props }) {
           url={url}
         />
       </mesh>
+      {/*image title*/}
       <Text
         maxWidth={0.1}
         anchorX="left"
