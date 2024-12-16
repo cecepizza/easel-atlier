@@ -72,7 +72,7 @@ export default function AdminUpload() {
               setFormData({ ...formData, title: e.target.value })
             }
             required
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-black"
           />
         </div>
 
@@ -85,7 +85,7 @@ export default function AdminUpload() {
               setFormData({ ...formData, price: e.target.value })
             }
             required
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-black"
           />
         </div>
 
@@ -97,7 +97,7 @@ export default function AdminUpload() {
               setFormData({ ...formData, size: e.target.value as Size })
             }
             required
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-black"
           >
             {Object.values(Size).map((size) => (
               <option key={size} value={size}>
@@ -115,7 +115,7 @@ export default function AdminUpload() {
               setFormData({ ...formData, medium: e.target.value as Medium })
             }
             required
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-black"
           >
             {Object.values(Medium).map((medium) => (
               <option key={medium} value={medium}>
@@ -133,7 +133,7 @@ export default function AdminUpload() {
               setFormData({ ...formData, style: e.target.value as Style })
             }
             required
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-black"
           >
             {Object.values(Style).map((style) => (
               <option key={style} value={style}>
