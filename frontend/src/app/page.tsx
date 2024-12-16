@@ -1,300 +1,131 @@
-"use client";
+"use client"; // use client side rendering
 
-import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import {
-  useCursor, // hook to handle cursor state
-  Image, // display image in 3d space
-  Text, // 3d text
-  Environment, // environment settings
-  OrbitControls, // orbit controls
-  CameraControls, // camera controls
-  KeyboardControls, // keyboard controls
-} from "@react-three/drei";
-import { useRoute, useLocation } from "wouter";
-import { easing } from "maath"; // animation easing
-import getUuid from "uuid-by-string"; // generate unique ids from strings
-import { MeshBasicMaterial } from "three";
-import envConfig from "../env.config";
+import * as THREE from "three";
+import EnvironmentSetup from "../scenes/environmentSetup";
+import useImages from "../hooks/useImages";
+import Frames from "../components/artwork/allFrames";
+import { Float } from "@react-three/drei";
 
-const GOLDENRATIO = 1.61803398875; // golden ratio for aesthetic purposes
+// Separate component for the animated cityscape
+const Cityscape = () => {
+  const buildingsRef = useRef([]);
 
-const pexel = (id: string) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`;
-const mockImages = [
-  // Front
-  { position: [0, 0, 1.5], rotation: [0, 0, 0], url: pexel("1103970") },
-  // Back
-  { position: [-0.8, 0, -0.6], rotation: [0, 0, 0], url: pexel("416430") },
-  { position: [0.8, 0, -0.6], rotation: [0, 0, 0], url: pexel("310452") },
-  // Left
-  {
-    position: [-1.75, 0, 0.5],
-    rotation: [0, Math.PI / 2.5, 0],
-    url: pexel("327482"),
-  },
-  {
-    position: [-2.15, 0, 1.5],
-    rotation: [0, Math.PI / 2.5, 0],
-    url: pexel("325185"),
-  },
-  {
-    position: [-2, 0, 2.75],
-    rotation: [0, Math.PI / 2.5, 0],
-    url: pexel("358574"),
-  },
-  // Right
-  {
-    position: [1.75, 0, 0.25],
-    rotation: [0, -Math.PI / 2.5, 0],
-    url: pexel("227675"),
-  },
-  {
-    position: [2.15, 0, 1.5],
-    rotation: [0, -Math.PI / 2.5, 0],
-    url: pexel("911738"),
-  },
-  {
-    position: [2, 0, 2.75],
-    rotation: [0, -Math.PI / 2.5, 0],
-    url: pexel("1738986"),
-  },
-];
-
-// fetch and manage images
-const useImages = () => {
-  const [images, setImages] = useState(mockImages);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // fetch artworks from API
-    const fetchArtworks = async () => {
-      try {
-        const response = await fetch(`${envConfig.apiUrl}/artworks`);
-        const artworks = await response.json();
-        // Transform API data to match our image format
-        const artworkImages = artworks.map((artwork: any, index: number) => ({
-          position: mockImages[index % mockImages.length].position,
-          rotation: mockImages[index % mockImages.length].rotation,
-          url: `${envConfig.apiUrl}/images/${encodeURIComponent(
-            artwork.imageURL
-          )}`,
-          name: artwork.title,
-        }));
-        setImages(artworkImages);
-        console.log(artworkImages);
-      } catch (error) {
-        console.error("Failed to fetch artworks:", error);
-        // Keep using mockImages on error
-      } finally {
-        setLoading(false);
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    buildingsRef.current.forEach((building, i) => {
+      if (building) {
+        // Animate building lights with grayscale colors
+        const material = building.material;
+        const brightness = 0.3 + Math.sin(time + i) * 0.2;
+        material.emissive.setRGB(brightness, brightness, brightness);
+        material.opacity = 0.3 + Math.sin(time * 0.5 + i * 0.1) * 0.1;
       }
-    };
+    });
+  });
 
-    fetchArtworks();
-  }, []);
+  return (
+    <group position={[1, -1.5, 1]}>
+      {/* Grayscale Buildings */}
+      {Array.from({ length: 150 }).map((_, i) => (
+        <mesh
+          key={i}
+          ref={(el) => (buildingsRef.current[i] = el)}
+          position={[
+            (i % 10) * 2 - 9,
+            Math.random() * 8 + 10,
+            Math.floor(i / 10) * 2 - 20,
+          ]}
+          castShadow
+          receiveShadow
+        >
+          <boxGeometry args={[1, Math.random() * 8 + 1, 1]} />
+          <meshPhysicalMaterial
+            color="#333333"
+            emissive="#666666"
+            emissiveIntensity={0.2}
+            metalness={0.9}
+            roughness={0.1}
+            transparent={true}
+            opacity={0.3}
+            transmission={0.6}
+            thickness={0.5}
+            clearcoat={1}
+          />
+        </mesh>
+      ))}
 
-  const imagesPlusThree = [...images, ...mockImages.slice(-3)];
-
-  return { images: imagesPlusThree, loading };
+      {/* Grayscale fog */}
+      {Array.from({ length: 20 }).map((_, i) => (
+        <Float key={i} speed={0.3} rotationIntensity={0.1} floatIntensity={0.2}>
+          <mesh
+            position={[(i % 5) * 5 - 10, -6, Math.floor(i / 5) * 5 - 10]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          >
+            <planeGeometry args={[10, 10]} />
+            <meshStandardMaterial
+              color="#444444"
+              transparent
+              opacity={0.15}
+              fog={true}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
 };
 
 const App = () => {
-  const { images, loading } = useImages();
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
+  const { images, loading } = useImages(); // custom hook to fetch images
+  const [width, setWidth] = useState(window.innerWidth); // state for window width
+  const [height, setHeight] = useState(window.innerHeight); // state for window height
 
-  // handle window resize
   useEffect(() => {
     const handleResize = () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
+      setWidth(window.innerWidth); // update width state on window resize
+      setHeight(window.innerHeight); // update height state on window resize
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    window.addEventListener("resize", handleResize); // add event listener for window resize
+    return () => window.removeEventListener("resize", handleResize); //cleanup event listener on componenet unmount
+  }, []); // empty dependency array ensures this runs only once on mount
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>; // display loading message while images are being fetched
 
   return (
+    // main container for the app
     <div className="h-screen w-full">
       <Canvas
-        className="h-[${height}px] w-[${width}px]"
-        dpr={[1, 1.5]} // device pixel ratio settings
-        camera={{ fov: 70, position: [0, 2, 15] }} // initial camera setup
+        className="h-[${height}px] w-[${width}px]" // set canvas size to match window size
+        dpr={[1, 1.5]} // set device pixel ratio
+        camera={{ fov: 70, position: [0, 2, 15] }} // set camera position and field of view
+        shadows
       >
-        <color attach="background" args={["#191920"]} /> // scene background
-        color
-        <fog attach="fog" args={["#191920", 0, 15]} /> // fog settings
+        {/* // render environment setup */}
+        <EnvironmentSetup />
+        {/* // position frames and other elements  */}
         <group position={[0, -1.5, 0]}>
+          {/* // render frames with images */}
           <Frames images={images} />
+          {/* // mesh for ground plane  */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[70, 100]} /> // plane geometry for the
-            background
+            {/* // plane geometry for ground plane */}
+            <planeGeometry args={[1000, 1000]} />
+            {/* // material for ground plane */}
+            <meshStandardMaterial
+              color="#111"
+              metalness={0.8}
+              roughness={0.3}
+            />
           </mesh>
+          <Cityscape />
         </group>
-        <Environment preset="city" /> // environment lighting
       </Canvas>
     </div>
   );
 };
 
 export default App;
-
-// frames component manages the collection of image frames
-function Frames({
-  images,
-  q = new THREE.Quaternion(), // for rotation
-  p = new THREE.Vector3(), // for position
-}) {
-  const ref = useRef<THREE.Group>(null);
-  const clicked = useRef<THREE.Object3D | null>(null);
-  const [, params] = useRoute("/item/:id"); // get route parameters
-  console.log(params);
-  const [, setLocation] = useLocation(); // navigation handler
-
-  // handle frame selection and camera movement
-  useEffect(() => {
-    if (!ref.current) return;
-    if (params?.id) {
-      clicked.current = ref.current.getObjectByName(params?.id || "");
-    } else {
-      clicked.current = null;
-    }
-    // update camera position when frame is selected
-    if (clicked.current) {
-      clicked.current.parent?.updateWorldMatrix(true, true);
-      clicked.current.parent?.localToWorld(
-        p.set(0, GOLDENRATIO / 2 + 0.6, 1.5)
-      );
-      clicked.current.parent?.getWorldQuaternion(q);
-    } else {
-      p.set(0, 0, 5.5);
-      q.identity();
-    }
-  });
-
-  // animate camera movement
-  useFrame((state, dt) => {
-    easing.damp3(state.camera.position, p, 0.4, dt);
-    easing.dampQ(state.camera.quaternion, q, 0.4, dt);
-  });
-
-  console.log(images);
-
-  return (
-    <group
-      ref={ref}
-      onClick={(e) => (
-        e.stopPropagation(),
-        setLocation(
-          clicked.current === e.object ? "/" : "/item/" + e.object.name
-        )
-      )}
-      onPointerMissed={() => setLocation("/")}
-    >
-      {images.map(
-        (props) => <Frame key={props.url} {...props} /> /* prettier-ignore */
-      )}
-    </group>
-  );
-}
-
-// individual frame component
-function Frame({ url, c = new THREE.Color(), ...props }) {
-  const image = useRef<THREE.Mesh>(null);
-  const frame = useRef<THREE.Mesh>(null);
-  const group = useRef<THREE.Group>(null);
-  const [, params] = useRoute("/item/:id");
-  const [hovered, hover] = useState(false);
-  const [rnd] = useState(() => Math.random()); // random value for animations
-  const name = getUuid(url);
-  const isActive = params?.id === name;
-  useCursor(hovered); // change cursor when hovered
-
-  // handle frame animations
-  useFrame((state, dt) => {
-    if (!image.current || !frame.current || !group.current) return;
-
-    // floating animation
-    const floatOffset = Math.sin(state.clock.elapsedTime + rnd * 2000) * 0.1;
-    group.current.position.y = floatOffset;
-
-    // image zoom animation
-    image.current.material.zoom =
-      2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2;
-
-    // scale animaton on hover
-    easing.damp3(
-      image.current.scale,
-      [
-        1 * (!isActive && hovered ? 0.85 : 1),
-        1 * (!isActive && hovered ? 0.75 : 1),
-        1,
-      ],
-      0.1,
-      dt
-    );
-
-    // frame color animation
-    easing.dampC(
-      frame.current.material.color,
-      hovered ? "black" : "white",
-      0.1,
-      dt
-    );
-  });
-
-  return (
-    // this group is the parent of the mesh which we are using for identification
-    <group ref={group} {...props}>
-      <mesh
-        // this name is used as a unique identifier to focus and manipulate things
-        name={name}
-        onPointerOver={(e) => (e.stopPropagation(), hover(true))}
-        onPointerOut={() => hover(false)}
-        scale={[1, GOLDENRATIO, 0.05]}
-        position={[0, GOLDENRATIO / 1, 0]}
-      >
-        <boxGeometry />
-        <meshStandardMaterial
-          color="#lightgray"
-          metalness={1.5}
-          roughness={2.5}
-          envMapIntensity={2}
-        />
-
-        {/* frame border */}
-        <mesh
-          ref={frame}
-          raycast={() => null}
-          scale={[0.9, 0.93, 0.9]}
-          //   position={[0, 0, 0.0]}
-        >
-          <boxGeometry />
-          <meshBasicMaterial color="white" toneMapped={false} fog={false} />
-        </mesh>
-
-        {/* image mesh */}
-        <Image
-          raycast={() => null}
-          ref={image}
-          position={[0, 0, 0.7]}
-          url={url}
-        />
-      </mesh>
-      {/*image title*/}
-      <Text
-        maxWidth={0.1}
-        anchorX="left"
-        anchorY="top"
-        position={[0.55, GOLDENRATIO, 0]}
-        fontSize={0.025}
-      >
-        {name.split("-").join(" ")}
-      </Text>
-    </group>
-  );
-}

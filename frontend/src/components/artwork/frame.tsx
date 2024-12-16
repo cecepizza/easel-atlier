@@ -1,6 +1,6 @@
 // individual frame component
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useRoute } from "wouter";
 import { useCursor } from "@react-three/drei";
@@ -8,34 +8,59 @@ import { easing } from "maath"; // animation easing
 import getUuid from "uuid-by-string"; /// generate unique ids from strings
 import * as THREE from "three";
 import { Image, Text } from "@react-three/drei";
-import envConfig from "../env.config";
+// import envConfig from "../../env.config";
 
 const GOLDENRATIO = 1.61803398875; // golden ratio for aesthetic purposes
 
-export default function Frame({ url, c = new THREE.Color(), ...props }) {
+export default function Frame({
+  url,
+  metadata,
+  c = new THREE.Color(),
+  ...props
+}) {
   const image = useRef<THREE.Mesh>(null);
   const frame = useRef<THREE.Mesh>(null);
   const group = useRef<THREE.Group>(null);
   const [, params] = useRoute("/item/:id");
   const [hovered, hover] = useState(false);
-  const [rnd] = useState(() => Math.random()); // random value for animations
+  const [rnd] = useState(() => Math.random());
   const name = getUuid(url);
   const isActive = params?.id === name;
-  useCursor(hovered); // change cursor when hovered
+  useCursor(hovered);
 
-  // handle frame animations
+  // Keep frame size consistent for camera
+  const frameScale = [1, GOLDENRATIO, 0.05];
+  const framePosition = [0, GOLDENRATIO / 1, 0];
+
+  // Handle image aspect ratio
+  useEffect(() => {
+    if (image.current) {
+      const img = new window.Image();
+      img.onload = () => {
+        const aspectRatio = img.width / img.height;
+        if (image.current) {
+          // Adjust image scale within the frame
+          if (aspectRatio > 1) {
+            image.current.scale.set(0.9, 0.9 / aspectRatio, 1);
+          } else {
+            image.current.scale.set(0.9 * aspectRatio, 0.9, 1);
+          }
+        }
+      };
+      img.src = url;
+    }
+  }, [url]);
+
+  // Original frame animations
   useFrame((state, dt) => {
     if (!image.current || !frame.current || !group.current) return;
 
-    // floating animation
     const floatOffset = Math.sin(state.clock.elapsedTime + rnd * 2000) * 0.1;
     group.current.position.y = floatOffset;
 
-    // image zoom animation
     image.current.material.zoom =
       2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2;
 
-    // scale animaton on hover
     easing.damp3(
       image.current.scale,
       [
@@ -47,7 +72,6 @@ export default function Frame({ url, c = new THREE.Color(), ...props }) {
       dt
     );
 
-    // frame color animation
     easing.dampC(
       frame.current.material.color,
       hovered ? "black" : "white",
@@ -57,15 +81,13 @@ export default function Frame({ url, c = new THREE.Color(), ...props }) {
   });
 
   return (
-    // this group is the parent of the mesh which we are using for identification
     <group ref={group} {...props}>
       <mesh
-        // this name is used as a unique identifier to focus and manipulate things
         name={name}
         onPointerOver={(e) => (e.stopPropagation(), hover(true))}
         onPointerOut={() => hover(false)}
-        scale={[1, GOLDENRATIO, 0.05]}
-        position={[0, GOLDENRATIO / 1, 0]}
+        scale={frameScale}
+        position={framePosition}
       >
         <boxGeometry />
         <meshStandardMaterial
@@ -75,27 +97,22 @@ export default function Frame({ url, c = new THREE.Color(), ...props }) {
           envMapIntensity={2}
         />
 
-        {/* frame border */}
-        <mesh
-          ref={frame}
-          raycast={() => null}
-          scale={[0.9, 0.93, 0.9]}
-          //   position={[0, 0, 0.0]}
-        >
+        <mesh ref={frame} raycast={() => null} scale={[0.9, 0.93, 0.9]}>
           <boxGeometry />
           <meshBasicMaterial color="white" toneMapped={false} fog={false} />
         </mesh>
 
-        {/* image mesh */}
         <Image
           raycast={() => null}
           ref={image}
           position={[0, 0, 0.7]}
           url={url}
-          color="#lightgray"
+          grayscale={0}
+          zoom={1}
+          transparent
+          opacity={1}
         />
       </mesh>
-      {/*image title*/}
       <Text
         maxWidth={0.1}
         anchorX="left"
