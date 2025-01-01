@@ -1,6 +1,6 @@
 // individual frame component
 
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useRoute } from "wouter";
 import { useCursor } from "@react-three/drei";
@@ -12,60 +12,64 @@ import { Image, Text } from "@react-three/drei";
 
 const GOLDENRATIO = 1.61803398875; // golden ratio for aesthetic purposes
 
-export default function Frame({
+interface FrameProps {
+  url: string;
+  metadata?: any;
+  c?: THREE.Color;
+  width?: number;
+  height?: number;
+}
+
+const Frame = React.memo(function Frame({
   url,
   metadata,
   c = new THREE.Color(),
+  width,
+  height,
   ...props
-}) {
+}: FrameProps) {
   const image = useRef<THREE.Mesh>(null);
-  const frame = useRef<THREE.Mesh>(null);
+  const frame = useRef<THREE.Mesh>(null); // reference frame mesh
   const group = useRef<THREE.Group>(null);
-  const [, params] = useRoute("/item/:id");
+  const [, params] = useRoute<{ id: string }>("/item/:id");
   const [hovered, hover] = useState(false);
   const [rnd] = useState(() => Math.random());
   const name = getUuid(url);
   const isActive = params?.id === name;
   useCursor(hovered);
 
-  // Keep frame size consistent for camera
-  const frameScale = [1, GOLDENRATIO, 0.05];
-  const framePosition = [0, GOLDENRATIO / 1, 0];
+  // Set frame size based on image aspect ratio
+  const aspectRatio = width && height ? width / height : 1;
+  const frameScale: [number, number, number] =
+    aspectRatio > 1
+      ? [0.9, 0.9 / aspectRatio, 0.05]
+      : [0.9 * aspectRatio, 0.9, 0.05];
+  const framePosition: [number, number, number] = [0, GOLDENRATIO / 1, 0];
 
-  // Handle image aspect ratio
-  useEffect(() => {
-    if (image.current) {
-      const img = new window.Image();
-      img.onload = () => {
-        const aspectRatio = img.width / img.height;
-        if (image.current) {
-          // Adjust image scale within the frame
-          if (aspectRatio > 1) {
-            image.current.scale.set(0.9, 0.9 / aspectRatio, 1);
-          } else {
-            image.current.scale.set(0.9 * aspectRatio, 0.9, 1);
-          }
-        }
-      };
-      img.src = url;
-    }
-  }, [url]);
+  // Set image scale to match frame scale
+  const imageScale: [number, number, number] = [
+    frameScale[0] * 0.95,
+    frameScale[1] * 0.95,
+    frameScale[2] * 0.95,
+  ];
 
   // Original frame animations
   useFrame((state, dt) => {
     if (!image.current || !frame.current || !group.current) return;
 
-    const floatOffset = Math.sin(state.clock.elapsedTime + rnd * 2000) * 0.1;
+    // float offset
+    const floatOffset = Math.sin(state.clock.elapsedTime + rnd * 2000) * 0.05;
     group.current.position.y = floatOffset;
 
-    image.current.material.zoom =
-      2 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 2;
+    // Minimize zoom variation
+    (image.current.material as any).zoom =
+      1.0 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 50;
 
     easing.damp3(
       image.current.scale,
       [
-        1 * (!isActive && hovered ? 0.85 : 1),
-        1 * (!isActive && hovered ? 0.75 : 1),
+        1 * (!isActive && hovered ? 0.95 : 1),
+        1 * (!isActive && hovered ? 0.95 : 1),
         1 * (!isActive && hovered ? 1.05 : 1),
       ],
       0.1,
@@ -73,7 +77,7 @@ export default function Frame({
     );
 
     easing.dampC(
-      frame.current.material.color,
+      (frame.current.material as THREE.MeshBasicMaterial).color,
       hovered ? "black" : "white",
       0.1,
       dt
@@ -107,6 +111,7 @@ export default function Frame({
           ref={image}
           position={[0, 0, 0.7]}
           url={url}
+          scale={imageScale}
           grayscale={0}
           zoom={1}
           transparent
@@ -124,4 +129,6 @@ export default function Frame({
       </Text>
     </group>
   );
-}
+});
+
+export default Frame;

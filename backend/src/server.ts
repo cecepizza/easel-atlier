@@ -3,7 +3,7 @@ import express from "express";
 import { initClerk } from "./config/clerk";
 import routes from "./routes";
 import cors from "cors";
-
+import promptGeneration from "./routes/promptGeneration";
 // Load environment variables FIRST (must happen before any other code)
 dotenv.config();
 

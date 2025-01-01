@@ -14,7 +14,6 @@ import { prisma } from "../config/prisma";
 import imageRoutes from "./getImage";
 import artworkRoutes from "./getArtworksMetadata";
 import checkoutRoutes from "./checkout";
-import express from "express";
 import cors from "cors";
 
 const router = Router();
@@ -128,6 +127,7 @@ router.post(
     }
   }) as RequestHandler
 );
+
 // api endpoint that serves image data
 router.use("/images", imageRoutes); // .use() creates a route prefix - tells express where to look for handlers - creates API endpoint
 

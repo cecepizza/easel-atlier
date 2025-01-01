@@ -2,11 +2,12 @@ import { Environment, Grid, Points, PointMaterial } from "@react-three/drei";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { Points as PointsType } from "@react-three/drei";
 
 const EnvironmentSetup = () => {
   const gridRef = useRef();
-  const gridMaterialRef = useRef();
-  const pointsRef = useRef();
+  const gridMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const pointsRef = useRef<THREE.Points>(null);
 
   // Generate points for the grid
   const generatePoints = () => {
@@ -38,7 +39,8 @@ const EnvironmentSetup = () => {
     // Points animation
     if (pointsRef.current) {
       const time = clock.getElapsedTime();
-      const positions = pointsRef.current.geometry.attributes.position.array;
+      const positions = pointsRef.current.geometry.attributes.position
+        .array as Float32Array;
 
       for (let i = 0; i < positions.length; i += 3) {
         positions[i + 1] =

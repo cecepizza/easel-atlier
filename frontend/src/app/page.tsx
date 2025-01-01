@@ -79,42 +79,34 @@ const Cityscape = () => {
 };
 
 const App = () => {
-  const { images, loading } = useImages(); // custom hook to fetch images
-  const [width, setWidth] = useState(window.innerWidth); // state for window width
-  const [height, setHeight] = useState(window.innerHeight); // state for window height
+  const { images, loading } = useImages();
+  const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
 
   useEffect(() => {
     const handleResize = () => {
-      setWidth(window.innerWidth); // update width state on window resize
-      setHeight(window.innerHeight); // update height state on window resize
+      setWidth(window.innerWidth);
+      setHeight(window.innerHeight);
     };
 
-    window.addEventListener("resize", handleResize); // add event listener for window resize
-    return () => window.removeEventListener("resize", handleResize); //cleanup event listener on componenet unmount
-  }, []); // empty dependency array ensures this runs only once on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  if (loading) return <div>Loading...</div>; // display loading message while images are being fetched
+  if (loading) return <div>Loading...</div>;
 
   return (
-    // main container for the app
     <div className="h-screen w-full">
       <Canvas
-        className="h-[${height}px] w-[${width}px]" // set canvas size to match window size
-        dpr={[1, 1.5]} // set device pixel ratio
-        camera={{ fov: 70, position: [0, 2, 15] }} // set camera position and field of view
+        style={{ height: `${height}px`, width: `${width}px` }} // set canvas size to match window size
+        camera={{ fov: 70, position: [0, 2, 15] }}
         shadows
       >
-        {/* // render environment setup */}
         <EnvironmentSetup />
-        {/* // position frames and other elements  */}
         <group position={[0, -1.5, 0]}>
-          {/* // render frames with images */}
           <Frames images={images} />
-          {/* // mesh for ground plane  */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            {/* // plane geometry for ground plane */}
             <planeGeometry args={[1000, 1000]} />
-            {/* // material for ground plane */}
             <meshStandardMaterial
               color="#111"
               metalness={0.8}
