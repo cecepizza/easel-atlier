@@ -41,18 +41,30 @@ const useImages = () => {
         const response = await fetch(`${envConfig.apiUrl}/artworks`);
         const artworks = await response.json();
 
-        // Pre-load images and get dimensions
         const artworkImagesPromises = artworks.map(
           async (artwork: any, index: number) => {
             const imageUrl = `${envConfig.apiUrl}/images/${encodeURIComponent(
               artwork.imageURL
             )}`;
 
+            // Fetch image dimensions
+            const img = new window.Image();
+            img.src = imageUrl;
+            await img.decode(); // Wait for image to load
+
+            console.log(
+              `Image dimensions for ${artwork.title}:`,
+              img.width,
+              img.height
+            );
+
             return {
               position: mockImages[index % mockImages.length].position,
               rotation: mockImages[index % mockImages.length].rotation,
               url: imageUrl,
               name: artwork.title,
+              width: img.width,
+              height: img.height,
             };
           }
         );

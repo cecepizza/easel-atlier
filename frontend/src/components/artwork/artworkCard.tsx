@@ -24,7 +24,9 @@ export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
         className="w-full object-contain"
         onError={(e) => {
           console.error(`failed to load image: ${artwork.imageURL}`);
-          console.log(envConfig.apiUrl + "/images/" + encodeURIComponent());
+          console.log(
+            envConfig.apiUrl + "/images/" + encodeURIComponent(artwork.imageURL)
+          );
           e.currentTarget.style.display = "none";
         }}
       />
