@@ -105,14 +105,6 @@ const App = () => {
         <EnvironmentSetup />
         <group position={[0, -1.5, 0]}>
           <Frames images={images} />
-          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[1000, 1000]} />
-            <meshStandardMaterial
-              color="#111"
-              metalness={0.8}
-              roughness={0.3}
-            />
-          </mesh>
           <Cityscape />
         </group>
       </Canvas>
