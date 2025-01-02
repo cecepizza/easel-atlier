@@ -18,6 +18,7 @@ interface FrameProps {
   c?: THREE.Color;
   width?: number;
   height?: number;
+  position?: [number, number, number];
 }
 
 const Frame = React.memo(function Frame({
@@ -26,6 +27,7 @@ const Frame = React.memo(function Frame({
   c = new THREE.Color(),
   width,
   height,
+  position = [0, 0, 0],
   ...props
 }: FrameProps) {
   const image = useRef<THREE.Mesh>(null);
@@ -91,7 +93,7 @@ const Frame = React.memo(function Frame({
         onPointerOver={(e) => (e.stopPropagation(), hover(true))}
         onPointerOut={() => hover(false)}
         scale={frameScale}
-        position={framePosition}
+        position={position}
       >
         <boxGeometry />
         <meshStandardMaterial
@@ -118,15 +120,15 @@ const Frame = React.memo(function Frame({
           opacity={1}
         />
       </mesh>
-      <Text
+      {/* <Text
         maxWidth={0.1}
         anchorX="left"
         anchorY="top"
         position={[0.55, GOLDENRATIO, 0]}
         fontSize={0.025}
-      >
-        {name.split("-").join(" ")}
-      </Text>
+      > */}
+      {name.split("-").join(" ")}
+      {/* </Text> */}
     </group>
   );
 });
