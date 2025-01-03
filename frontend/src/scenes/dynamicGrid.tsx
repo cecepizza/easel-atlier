@@ -41,6 +41,8 @@ const DynamicGrid = ({ framePositions }) => {
           linewidth={1} // Line thickness
           transparent
           opacity={0.5} // Make lines slightly transparent
+          renderOrder={-1} // Ensures lines are rendered behind the frames
+          depthWrite={false} // Prevent lines from affecting the depth buffer
         />
       ))}
     </>
