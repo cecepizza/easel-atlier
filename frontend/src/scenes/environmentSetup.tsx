@@ -12,8 +12,8 @@ const Environment = () => {
 
     // Pulse grid effect
     if (gridRef.current) {
-      gridRef.current.material.emissiveIntensity =
-        0.5 + Math.sin(time * 2) * 0.2;
+      const material = gridRef.current.material as THREE.MeshStandardMaterial;
+      material.emissiveIntensity = 0.5 + Math.sin(time * 2) * 0.2;
     }
   });
 
@@ -33,7 +33,7 @@ const Environment = () => {
       >
         <planeGeometry args={[200, 200, 100, 100]} />
         <meshStandardMaterial
-          color="#4a6a8a" // Greyish-blue
+          color="#4a6a8a"
           emissive="#4a6a8a"
           emissiveIntensity={0.8}
           wireframe={true}
@@ -45,7 +45,7 @@ const Environment = () => {
       {/* Ambient Light */}
       <ambientLight intensity={0.1} color="#ffffff" />
 
-      {/* Spotlights for a Soft Sci-Fi Glow */}
+      {/* spotlights */}
       <spotLight
         position={[-50, 50, 50]}
         angle={Math.PI / 6}
@@ -63,7 +63,7 @@ const Environment = () => {
         castShadow
       />
 
-      {/* Additional Cinematic Lighting */}
+      {/* main point */}
       <pointLight
         position={[0, 20, 0]}
         intensity={1.5}
@@ -78,11 +78,11 @@ const Environment = () => {
         castShadow
       />
 
-      {/* Subtle Floating Shapes */}
+      {/* floating shapes */}
       {Array.from({ length: 10 }).map((_, i) => (
         <Float
           key={i}
-          speed={0.8 + Math.random() * 0.5} // Varying speeds
+          speed={0.8 + Math.random() * 0.5}
           rotationIntensity={0.3}
           floatIntensity={0.5}
         >

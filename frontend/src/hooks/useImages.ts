@@ -3,8 +3,8 @@ import envConfig from "../env.config";
 
 // useImages --> fetch and manage images
 
-const pexel = (id: string) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`;
+// const pexel = (id: string) =>
+//   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`;
 
 const totalImages = 62; // Total number of images
 const imagesPerRow = 8; // How many images in each row
@@ -24,11 +24,18 @@ const mockImages = Array.from({ length: totalImages }, (_, index) => {
   const z = -row * depthSpacing; // Add depth for each row
 
   return {
-    position: [x, y, z],
-    rotation: [0, 0, 0],
+    position: [x, y, z] as [number, number, number],
+    rotation: [0, 0, 0] as [number, number, number],
     url: "",
   };
 });
+
+// Define an interface for the artwork object
+interface Artwork {
+  imageURL: string;
+  title: string;
+  // Add other properties of the artwork object if needed
+}
 
 // fetch and manage images
 const useImages = () => {
@@ -42,7 +49,7 @@ const useImages = () => {
         const artworks = await response.json();
 
         const artworkImagesPromises = artworks.map(
-          async (artwork: any, index: number) => {
+          async (artwork: Artwork, index: number) => {
             const imageUrl = `${envConfig.apiUrl}/images/${encodeURIComponent(
               artwork.imageURL
             )}`;

@@ -5,6 +5,7 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import "./globals.css";
 import { UserProvider } from "../contexts/UserContext";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,7 @@ export default function RootLayout({
       <UserProvider>
         <html lang="en">
           <head>
-            <script src="https://js.stripe.com/v3/"></script>
+            <Script src="https://js.stripe.com/v3/"></Script>
           </head>
           <body className={`${inter.className} min-h-screen flex flex-col`}>
             <Navbar />

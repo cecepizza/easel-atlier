@@ -5,19 +5,21 @@ import { Canvas } from "@react-three/fiber";
 import EnvironmentSetup from "../scenes/environmentSetup";
 import useImages from "../hooks/useImages";
 import Frames from "../components/artwork/allFrames";
-import Cityscape from "../scenes/dynamicGrid";
+import DynamicGrid from "../scenes/dynamicGrid";
 
 const App = () => {
   const { images, loading } = useImages();
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
 
   useEffect(() => {
+    // Ensure this code runs only in the browser
     const handleResize = () => {
       setWidth(window.innerWidth);
       setHeight(window.innerHeight);
     };
 
+    handleResize(); // Set initial dimensions
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -34,6 +36,7 @@ const App = () => {
         <EnvironmentSetup />
         <group position={[0, -1.5, 0]}>
           <Frames images={images} />
+          <DynamicGrid framePositions={images.map((img) => img.position)} />
         </group>
       </Canvas>
     </div>

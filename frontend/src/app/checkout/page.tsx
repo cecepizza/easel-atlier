@@ -31,7 +31,7 @@ export default function CheckoutPage() {
               className="bg-[#1F2937] rounded-lg p-4 flex items-center gap-4 border border-gray-800 hover:border-gray-700 transition-colors"
             >
               <div className="w-24 h-24 relative flex-shrink-0 overflow-hidden rounded-md">
-                <img
+                <Image
                   src={`${
                     process.env.NEXT_PUBLIC_API_URL
                   }/images/${encodeURIComponent(artwork.imageURL)}`}
