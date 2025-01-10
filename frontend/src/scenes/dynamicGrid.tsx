@@ -7,7 +7,7 @@ import * as THREE from "three";
  * @param {Array} positions - Array of frame positions
  * @returns {Array} - Array of line positions
  */
-const generateGridLines = (positions) => {
+const generateGridLines = (positions: [number, number, number][]) => {
   if (!positions || positions.length === 0) return []; // Guard against undefined or empty array
   const lines = [];
   for (let i = 0; i < positions.length; i++) {
@@ -24,7 +24,11 @@ const generateGridLines = (positions) => {
   return lines;
 };
 
-const DynamicGrid = ({ framePositions }) => {
+const DynamicGrid = ({
+  framePositions,
+}: {
+  framePositions: [number, number, number][];
+}) => {
   // Generate grid lines based on frame positions
   const lines = useMemo(
     () => generateGridLines(framePositions),

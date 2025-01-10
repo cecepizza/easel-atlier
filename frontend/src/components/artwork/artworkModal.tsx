@@ -4,6 +4,7 @@ import { Artwork, useArtworkStore } from "../../store/useArtworkStore";
 import Modal from "../ui/modal";
 import envConfig from "../../env.config";
 import { useState } from "react";
+import Image from "next/image";
 
 interface ArtworkModalProps {
   artwork: Artwork | null;
@@ -62,7 +63,7 @@ export default function ArtworkModal({
           {/* Image container */}
           <div className="relative">
             <div className="aspect-square overflow-hidden rounded-lg bg-black/20">
-              <img
+              <Image
                 src={`${envConfig.apiUrl}/images/${encodeURIComponent(
                   artwork.imageURL
                 )}`}
