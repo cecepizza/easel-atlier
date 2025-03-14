@@ -1,7 +1,7 @@
-"use client";
+// This component displays artwork details in a modal
 
 import { Artwork, useArtworkStore } from "../../store/useArtworkStore";
-import Modal from "../ui/modal";
+import Modal from "../shared/ui/modal";
 import envConfig from "../../env.config";
 import { useState } from "react";
 
@@ -11,17 +11,18 @@ interface ArtworkModalProps {
   onClose: () => void;
 }
 
-export default function ArtworkModal({
-  artwork,
-  isOpen,
-  onClose,
-}: ArtworkModalProps) {
+const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) => {
+  // Get the addArtwork function from the artwork store
   const addArtwork = useArtworkStore((state) => state.addArtwork);
+  // Get the selected artwork from the artwork store
   const selectedArtwork = useArtworkStore((state) => state.selectedArtwork);
+  // Initialize the status state to "idle"
   const [status, setStatus] = useState<"idle" | "success">("idle");
 
+  // If no artwork is provided, return null
   if (!artwork) return null;
 
+  // Handle adding the artwork to the cart
   const handleAddToCart = () => {
     addArtwork(artwork);
     console.log("Current cart:", selectedArtwork);
@@ -124,4 +125,6 @@ export default function ArtworkModal({
       </div>
     </Modal>
   );
-}
+};
+
+export default ArtworkModal;

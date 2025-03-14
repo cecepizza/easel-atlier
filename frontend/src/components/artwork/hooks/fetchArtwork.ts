@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import envConfig from "../env.config";
+import envConfig from "../../../env.config";
 
 // useImages --> fetch and manage images
 
@@ -31,7 +31,7 @@ const mockImages = Array.from({ length: totalImages }, (_, index) => {
 });
 
 // fetch and manage images
-const useImages = () => {
+const fetchArtwork = () => {
   const [images, setImages] = useState(mockImages);
   const [loading, setLoading] = useState(true);
 
@@ -84,4 +84,4 @@ const useImages = () => {
   return { images, loading };
 };
 
-export default useImages;
+export default fetchArtwork;

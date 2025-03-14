@@ -1,5 +1,8 @@
+// This component displays a collection of frames
+
 import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 import { useRoute, useLocation } from "wouter";
 import { easing } from "maath";
 import Frame from "./frame";
@@ -8,7 +11,16 @@ import * as THREE from "three";
 
 const GOLDENRATIO = 1.61803398875;
 
+/**
+ * Calculates the position of a frame in a spherical arrangement.
+ *
+ * @param index The index of the frame.
+ * @param total The total number of frames.
+ * @param radius The radius of the sphere.
+ * @returns The position of the frame as an array of three numbers.
+ */
 function getPosition(index, total, radius) {
+  // calculates the position of a frame in a spherical arrangement
   const phi = Math.acos(-1 + (2 * index) / total);
   const theta = Math.sqrt(total * Math.PI) * phi;
 
@@ -21,7 +33,15 @@ function getPosition(index, total, radius) {
   return [x, y, z];
 }
 
-export default function Frames({
+/**
+ * The AllFrames component displays a collection of frames in a spherical arrangement.
+ *
+ * @param images An array of image objects.
+ * @param q The quaternion of the camera.
+ * @param p The position of the camera.
+ * @returns The JSX element representing the component.
+ */
+export default function AllFrames({
   images,
   q = new THREE.Quaternion(),
   p = new THREE.Vector3(),
@@ -63,26 +83,36 @@ export default function Frames({
     }
   }, [routeParams, p, q]);
 
-  useFrame((state, dt) => {
-    easing.damp3(state.camera.position, p, 0.4, dt);
-    easing.dampQ(state.camera.quaternion, q, 0.4, dt);
-  });
+  //   useFrame((state, dt) => {
+  //     easing.damp3(state.camera.position, p, 0.4, dt);
+  //     easing.dampQ(state.camera.quaternion, q, 0.4, dt);
+  //   });
 
   return (
     <>
+      <OrbitControls
+        makeDefault
+        enableZoom={true}
+        enablePan={true}
+        enableRotate={true}
+        minDistance={2}
+        maxDistance={20}
+      />
       <DynamicGrid framePositions={framePositions} />
       <group
-        ref={ref}
+        ref={ref} // create ref to access group directly
         onClick={(e) => {
-          e.stopPropagation();
+          // handles onclick of any frame
+          e.stopPropagation(); // clicks that dont hit any frame should not bubble up
           setLocation(
-            clicked.current === e.object ? "/" : "/item/" + e.object.name
+            clicked.current === e.object ? "/" : "/item/" + e.object.name // selects the current clicked frame to go back to home route or navigates to new clicked frame
           );
         }}
         onPointerMissed={() => setLocation("/")}
       >
         {images.map((props, index) => (
-          <Frame key={props.url} {...props} position={framePositions[index]} />
+          // each frame gets its image props and calculated position from framePositions array
+          <Frame key={props.url} {...props} position={framePositions[index]} /> // create Frame component for each image
         ))}
       </group>
     </>

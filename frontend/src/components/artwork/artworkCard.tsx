@@ -1,12 +1,16 @@
-import { Artwork } from "../../store/useArtworkStore";
-import envConfig from "../../env.config"; // imports your API url and other env variables
+// This component represents individual artwork cards
+import { Artwork } from "../../store/useArtworkStore"; // updated import path
+import envConfig from "../../env.config"; // updated import path
 
+// Define the props interface for the ArtworkCard component
 interface ArtworkCardProps {
   artwork: Artwork;
   onClick: (artwork: Artwork) => void;
 }
 
-export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
+// Define the ArtworkCard component
+const ArtworkCard = ({ artwork, onClick }: ArtworkCardProps) => {
+  // Return the JSX for the artwork card
   return (
     <div
       className="p-2 cursor-pointer transition-transform hover:scale-105"
@@ -36,4 +40,7 @@ export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
       </div>
     </div>
   );
-}
+};
+
+// Export the ArtworkCard component as the default export
+export default ArtworkCard;

@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import EnvironmentSetup from "../scenes/environmentSetup";
-import useImages from "../hooks/useImages";
+import useImages from "../components/artwork/hooks/fetchArtwork";
 import Frames from "../components/artwork/allFrames";
-import Cityscape from "../scenes/dynamicGrid";
 
 const App = () => {
   const { images, loading } = useImages();
