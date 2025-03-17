@@ -83,10 +83,10 @@ export default function AllFrames({
     }
   }, [routeParams, p, q]);
 
-  //   useFrame((state, dt) => {
-  //     easing.damp3(state.camera.position, p, 0.4, dt);
-  //     easing.dampQ(state.camera.quaternion, q, 0.4, dt);
-  //   });
+  useFrame((state, dt) => {
+    easing.damp3(state.camera.position, p, 0.4, dt);
+    easing.dampQ(state.camera.quaternion, q, 0.4, dt);
+  });
 
   return (
     <>
