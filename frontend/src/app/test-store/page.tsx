@@ -1,13 +1,7 @@
 "use client";
 import React from "react";
-
-import {
-  useArtworkStore,
-  Artwork,
-  Medium,
-  Style,
-  Size,
-} from "../../store/useArtworkStore";
+import { Artwork, Medium, Style, Size } from "../../types";
+import { useArtworkStore } from "../../store/useArtworkStore";
 
 // Test data
 const testArtwork: Artwork = {

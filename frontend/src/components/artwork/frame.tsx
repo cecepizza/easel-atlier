@@ -1,20 +1,17 @@
 // individual frame component
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useRoute } from "wouter";
 import { useCursor } from "@react-three/drei";
 import { easing } from "maath"; // animation easing
 import getUuid from "uuid-by-string"; /// generate unique ids from strings
 import * as THREE from "three";
-import { Image, Text } from "@react-three/drei";
+import { Image } from "@react-three/drei";
 // import envConfig from "../../env.config";
-
-const GOLDENRATIO = 1.61803398875; // golden ratio for aesthetic purposes
 
 interface FrameProps {
   url: string;
-  metadata?: any;
   c?: THREE.Color;
   width?: number;
   height?: number;
@@ -23,8 +20,6 @@ interface FrameProps {
 
 const Frame = React.memo(function Frame({
   url,
-  metadata,
-  c = new THREE.Color(),
   width,
   height,
   position = [0, 0, 0],
@@ -46,7 +41,6 @@ const Frame = React.memo(function Frame({
     aspectRatio > 1
       ? [0.9, 0.9 / aspectRatio, 0.05]
       : [0.9 * aspectRatio, 0.9, 0.05];
-  const framePosition: [number, number, number] = [0, GOLDENRATIO / 1, 0];
 
   // Set image scale to match frame scale
   const imageScale: [number, number, number] = [
@@ -64,8 +58,9 @@ const Frame = React.memo(function Frame({
     group.current.position.y = floatOffset;
 
     // Minimize zoom variation
-    (image.current.material as any).zoom =
-      1.0 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 50;
+    (
+      image.current.material as THREE.MeshBasicMaterial & { zoom: number }
+    ).zoom = 1.0 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 50;
 
     easing.damp3(
       image.current.scale,
@@ -109,7 +104,6 @@ const Frame = React.memo(function Frame({
         </mesh>
 
         <Image
-          raycast={() => null}
           ref={image}
           position={[0, 0, 0.7]}
           url={url}

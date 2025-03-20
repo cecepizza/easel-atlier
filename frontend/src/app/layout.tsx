@@ -23,7 +23,7 @@ export default function RootLayout({
       <UserProvider>
         <html lang="en">
           <head>
-            <script src="https://js.stripe.com/v3/"></script>
+            <script src="https://js.stripe.com/v3/" async></script>
           </head>
           <body className={`${inter.className} min-h-screen flex flex-col`}>
             <Navbar />

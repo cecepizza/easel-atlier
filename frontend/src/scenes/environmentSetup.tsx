@@ -7,13 +7,15 @@ const Environment = () => {
   const gridRef = useRef<THREE.Mesh>(null);
 
   // Animate grid
-  useFrame(({ clock }) => {
-    const time = clock.getElapsedTime();
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
 
     // Pulse grid effect
     if (gridRef.current) {
-      gridRef.current.material.emissiveIntensity =
-        0.5 + Math.sin(time * 2) * 0.2;
+      const material = gridRef.current.material as THREE.MeshStandardMaterial;
+      if (material.emissiveIntensity !== undefined) {
+        material.emissiveIntensity = 0.5 + Math.sin(time * 2) * 0.2;
+      }
     }
   });
 
