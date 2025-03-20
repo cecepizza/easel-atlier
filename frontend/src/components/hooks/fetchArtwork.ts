@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import envConfig from "../../env.config";
-import { Artwork } from "../../types";
 
 // useImages --> fetch and manage images
-
 const totalImages = 62; // Total number of images
 const imagesPerRow = 8; // How many images in each row
 const spacing = 1.5; // Horizontal spacing between images
@@ -22,11 +20,18 @@ const Illustations = Array.from({ length: totalImages }, (_, index) => {
   const z = -row * depthSpacing; // Add depth for each row
 
   return {
-    position: [x, y, z],
-    rotation: [0, 0, 0],
+    position: [x, y, z] as [number, number, number],
+    rotation: [0, 0, 0] as [number, number, number],
     url: "",
   };
 });
+
+// Define an interface for the artwork object
+interface Artwork {
+  imageURL: string;
+  title: string;
+  // Add other properties of the artwork object if needed
+}
 
 // fetch and manage images
 const useFetchArtwork = () => {

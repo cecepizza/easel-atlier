@@ -10,7 +10,7 @@ import * as THREE from "three";
 import { Image } from "@react-three/drei";
 // import envConfig from "../../env.config";
 
-interface FrameProps {
+export interface FrameProps {
   url: string;
   c?: THREE.Color;
   width?: number;
@@ -18,8 +18,15 @@ interface FrameProps {
   position?: [number, number, number];
 }
 
+// Define a custom type for the material
+interface CustomMaterial extends THREE.Material {
+  zoom: number;
+}
+
 const Frame = React.memo(function Frame({
   url,
+
+  c = new THREE.Color(),
   width,
   height,
   position = [0, 0, 0],
@@ -41,7 +48,6 @@ const Frame = React.memo(function Frame({
     aspectRatio > 1
       ? [0.9, 0.9 / aspectRatio, 0.05]
       : [0.9 * aspectRatio, 0.9, 0.05];
-
   // Set image scale to match frame scale
   const imageScale: [number, number, number] = [
     frameScale[0] * 0.95,
@@ -58,9 +64,8 @@ const Frame = React.memo(function Frame({
     group.current.position.y = floatOffset;
 
     // Minimize zoom variation
-    (
-      image.current.material as THREE.MeshBasicMaterial & { zoom: number }
-    ).zoom = 1.0 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 50;
+    (image.current.material as CustomMaterial).zoom =
+      1.0 + Math.sin(rnd * 10000 + state.clock.elapsedTime / 3) / 50;
 
     easing.damp3(
       image.current.scale,
@@ -112,6 +117,7 @@ const Frame = React.memo(function Frame({
           zoom={1}
           transparent
           opacity={1}
+          alt={name.split("-").join(" ")}
         />
       </mesh>
       {/* <Text

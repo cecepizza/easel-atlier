@@ -5,6 +5,7 @@ import Modal from "../ui/modal";
 import envConfig from "../../env.config";
 import { useState } from "react";
 import { Artwork } from "../../types";
+
 import Image from "next/image";
 
 interface ArtworkModalProps {
