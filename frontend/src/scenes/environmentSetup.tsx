@@ -1,19 +1,10 @@
 import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
 
 const Environment = () => {
   const gridRef = useRef<THREE.Mesh>(null);
-
-  // Animate grid
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-
-    // Pulse grid effect
-    if (gridRef.current) {
-    }
-  });
 
   return (
     <>
