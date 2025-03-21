@@ -1,5 +1,6 @@
-import { Artwork } from "../../store/useArtworkStore";
+import { Artwork } from "../../types";
 import envConfig from "../../env.config"; // imports your API url and other env variables
+import Image from "next/image";
 
 interface ArtworkCardProps {
   artwork: Artwork;
@@ -12,7 +13,7 @@ export default function ArtworkCard({ artwork, onClick }: ArtworkCardProps) {
       className="p-2 cursor-pointer transition-transform hover:scale-105"
       onClick={() => onClick(artwork)}
     >
-      <img
+      <Image
         src={(() => {
           const url = `${envConfig.apiUrl}/images/${encodeURIComponent(
             artwork.imageURL

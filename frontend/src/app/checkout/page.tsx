@@ -1,10 +1,9 @@
 // checkout page
 "use client";
 import React from "react";
-import CheckoutButton from "../../components/checkout/checkoutButton";
+import CheckoutButton from "../../components/ui/checkoutButton";
 import { useArtworkStore } from "../../store/useArtworkStore";
 import Image from "next/image";
-
 export default function CheckoutPage() {
   const selectedArtwork = useArtworkStore((state) => state.selectedArtwork);
   const total = selectedArtwork.reduce(
@@ -31,7 +30,7 @@ export default function CheckoutPage() {
               className="bg-[#1F2937] rounded-lg p-4 flex items-center gap-4 border border-gray-800 hover:border-gray-700 transition-colors"
             >
               <div className="w-24 h-24 relative flex-shrink-0 overflow-hidden rounded-md">
-                <img
+                <Image
                   src={`${
                     process.env.NEXT_PUBLIC_API_URL
                   }/images/${encodeURIComponent(artwork.imageURL)}`}

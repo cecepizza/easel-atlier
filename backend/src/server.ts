@@ -3,7 +3,6 @@ import express from "express";
 import { initClerk } from "./config/clerk";
 import routes from "./routes";
 import cors from "cors";
-import promptGeneration from "./routes/promptGeneration";
 // Load environment variables FIRST (must happen before any other code)
 dotenv.config();
 
@@ -27,7 +26,8 @@ app.use(routes);
 
 // API enpoint
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// // Start server
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
+module.exports = app;

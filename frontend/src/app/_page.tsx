@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import type { Artwork } from "../store/useArtworkStore";
+import { Artwork } from "../types";
 import envConfig from "../env.config";
 import ArtworkCard from "../components/artwork/artworkCard";
 import ArtworkModal from "../components/artwork/artworkModal";

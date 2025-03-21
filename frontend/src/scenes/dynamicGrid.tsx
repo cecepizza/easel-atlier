@@ -7,15 +7,15 @@ import * as THREE from "three";
  * @param {Array} positions - Array of frame positions
  * @returns {Array} - Array of line positions
  */
-const generateGridLines = (positions) => {
+const generateGridLines = (positions: THREE.Vector3[]) => {
   if (!positions || positions.length === 0) return []; // Guard against undefined or empty array
   const lines = [];
   for (let i = 0; i < positions.length; i++) {
     for (let j = i + 1; j < positions.length; j++) {
       // Create a line between two frames if they are close enough
       const distance = new THREE.Vector3()
-        .fromArray(positions[i])
-        .distanceTo(new THREE.Vector3().fromArray(positions[j]));
+        .fromArray(positions[i].toArray())
+        .distanceTo(new THREE.Vector3().fromArray(positions[j].toArray()));
       if (distance < 3) {
         lines.push([positions[i], positions[j]]);
       }
@@ -24,7 +24,11 @@ const generateGridLines = (positions) => {
   return lines;
 };
 
-const DynamicGrid = ({ framePositions }) => {
+const DynamicGrid = ({
+  framePositions,
+}: {
+  framePositions: THREE.Vector3[];
+}) => {
   // Generate grid lines based on frame positions
   const lines = useMemo(
     () => generateGridLines(framePositions),

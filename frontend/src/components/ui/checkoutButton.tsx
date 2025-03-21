@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Artwork } from "../../store/useArtworkStore";
+import { Artwork } from "../../types";
 import { loadStripe } from "@stripe/stripe-js";
 
 // Initialize Stripe client-side ONCE outside component

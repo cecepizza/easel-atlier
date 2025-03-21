@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Size, Medium, Style } from "../../../store/useArtworkStore";
+import { Size, Medium, Style } from "../../../types";
 import envConfig from "../../../env.config";
 
 export default function AdminUpload() {

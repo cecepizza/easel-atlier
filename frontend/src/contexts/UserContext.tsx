@@ -10,9 +10,17 @@ import { useUser } from "@clerk/nextjs";
 
 // setup a React Context system to manage user authentication state throughtout app
 // Defines the blueprint shape of data that will be shared through the context
+interface ClerkUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  // Add other properties as needed
+}
+
 type UserContextType = {
   isLoaded: boolean; // Indicates if user data has finished loading
-  userDetails: any; //user data from Clerk
+  userDetails: ClerkUser | null | undefined; // Allow undefined as a possible value
 };
 
 // Creates a React Context with undefined as initial value -- UserContext is the context object -- empty container that can hold and pass down data to components
@@ -26,11 +34,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // Uses Clerk's useUser hook to get authentication state and user data
   const { isLoaded, user } = useUser();
 
+  // Map the user data to the ClerkUser interface
+  const userDetails: ClerkUser = {
+    id: user?.id || "",
+    email: user?.emailAddresses[0]?.emailAddress || "", // Extract email from emailAddresses
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+  };
+
   return (
     <UserContext.Provider // put the data in the context container
       value={{
         isLoaded, // Indicates if user data has finished loading
-        userDetails: user, // The actual user data from Clerk
+        userDetails, // The actual user data from Clerk
       }}
     >
       {children}
