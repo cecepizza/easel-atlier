@@ -5,7 +5,6 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import "./globals.css";
 import { UserProvider } from "../contexts/UserContext";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 

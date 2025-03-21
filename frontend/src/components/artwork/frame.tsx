@@ -49,10 +49,9 @@ const Frame = React.memo(function Frame({
       ? [0.9, 0.9 / aspectRatio, 0.05]
       : [0.9 * aspectRatio, 0.9, 0.05];
   // Set image scale to match frame scale
-  const imageScale: [number, number, number] = [
+  const imageScale: [number, number] = [
     frameScale[0] * 0.95,
     frameScale[1] * 0.95,
-    frameScale[2] * 0.95,
   ];
 
   // Original frame animations
@@ -97,7 +96,7 @@ const Frame = React.memo(function Frame({
       >
         <boxGeometry />
         <meshStandardMaterial
-          color="#lightgray"
+          color={c}
           metalness={1.5}
           roughness={2.5}
           envMapIntensity={2}
@@ -117,7 +116,6 @@ const Frame = React.memo(function Frame({
           zoom={1}
           transparent
           opacity={1}
-          alt={name.split("-").join(" ")}
         />
       </mesh>
       {/* <Text
