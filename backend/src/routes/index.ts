@@ -61,6 +61,25 @@ router.get("/test-aws", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/test-db", async (req, res) => {
+  try {
+    // test prisma connection
+    const count = await prisma.artwork.count();
+    res.json({
+      success: true,
+      message: "DB connection successful",
+      artworkCount: count,
+    });
+  } catch (error) {
+    console.error("❌ DB connection failed:", error);
+    res.status(500).json({
+      success: false,
+      message: "DB connection failed",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+});
+
 // UPLOAD ROUTE: Handle file uploads ADMIN ONLY!!!
 router.post(
   "/admin/upload",

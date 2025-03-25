@@ -13,15 +13,9 @@ const prisma_1 = require("../config/prisma");
 const getImage_1 = __importDefault(require("./getImage"));
 const getArtworksMetadata_1 = __importDefault(require("./getArtworksMetadata"));
 const checkout_1 = __importDefault(require("./checkout"));
-const cors_1 = __importDefault(require("cors"));
 const router = (0, express_1.Router)();
 // Configure multer for file uploads (5MB limit)
 const upload = (0, multer_1.default)({ limits: { fileSize: 5 * 1024 * 1024 } });
-// Add cors middleware before your routes
-router.use((0, cors_1.default)({
-    origin: "http://localhost:3000", // Your frontend URL
-    credentials: true,
-}));
 // PROTECTED ROUTE: Get user details
 router.get("/protected", (0, express_2.requireAuth)(), async (req, res) => {
     // Type assertion for auth object from Clerk
@@ -57,6 +51,25 @@ router.get("/test-aws", async (req, res) => {
         res.status(500).json({
             success: false,
             message: "AWS credentials not working",
+            error: error instanceof Error ? error.message : String(error),
+        });
+    }
+});
+router.get("/test-db", async (req, res) => {
+    try {
+        // test prisma connection
+        const count = await prisma_1.prisma.artwork.count();
+        res.json({
+            success: true,
+            message: "DB connection successful",
+            artworkCount: count,
+        });
+    }
+    catch (error) {
+        console.error("❌ DB connection failed:", error);
+        res.status(500).json({
+            success: false,
+            message: "DB connection failed",
             error: error instanceof Error ? error.message : String(error),
         });
     }

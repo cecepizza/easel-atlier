@@ -14,7 +14,10 @@ app.use(express.json()); // parse incoming JSON requests
 // Add CORS middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000", // Your frontend URL
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL
+        : process.env.LOCAL_FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   })
 );
