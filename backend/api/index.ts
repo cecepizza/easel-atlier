@@ -1,11 +1,17 @@
-// api/index.ts
-export default function handler(req, res) {
-  console.log("Environment variable check:", {
-    stripeKeyExists: !!process.env.STRIPE_SECRET_KEY,
-    awsKeyExists: !!process.env.AWS_ACCESS_KEY_ID,
-    databaseUrlExists: !!process.env.DATABASE_URL,
-    // Don't log the actual values for security reasons
-  });
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
-  // Rest of your handler code
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Simple response to test if basic functionality works
+  return res.status(200).json({
+    message: "API is working",
+    query: req.query,
+    method: req.method,
+    path: req.url,
+    env: {
+      // Check if environment variables exist (don't show actual values)
+      stripeKeyExists: !!process.env.STRIPE_SECRET_KEY,
+      awsKeyExists: !!process.env.AWS_ACCESS_KEY_ID,
+      databaseUrlExists: !!process.env.DATABASE_URL,
+    },
+  });
 }
