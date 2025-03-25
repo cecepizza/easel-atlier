@@ -1,5 +1,12 @@
 import Stripe from "stripe";
 
+// Add more detailed logging
+console.log("Environment variables:", {
+  envKeys: Object.keys(process.env),
+  stripeKeyExists: !!process.env.STRIPE_SECRET_KEY,
+  stripeKeyLength: process.env.STRIPE_SECRET_KEY?.length,
+});
+
 // key validation and initialization
 console.log("Initializing Stripe with key:", {
   keyExists: !!process.env.STRIPE_SECRET_KEY,
