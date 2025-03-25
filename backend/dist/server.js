@@ -15,7 +15,9 @@ const port = 8000;
 app.use(express_1.default.json()); // parse incoming JSON requests
 // Add CORS middleware
 app.use((0, cors_1.default)({
-    origin: "http://localhost:3000", // Your frontend URL
+    origin: process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL
+        : process.env.LOCAL_FRONTEND_URL || "http://localhost:3000",
     credentials: true,
 }));
 // Initialize Clerk middleware for auth
