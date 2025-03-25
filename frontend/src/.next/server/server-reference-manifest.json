@@ -1,5 +1,90 @@
 {
-  "node": {},
+  "node": {
+    "7fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf": {
+      "workers": {
+        "app/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        },
+        "app/_not-found/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        },
+        "app/admin/upload/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "rsc",
+        "app/_not-found/page": "rsc",
+        "app/admin/upload/page": "rsc"
+      }
+    },
+    "7fa6256ea568749925d3629fe28f530cfacfa7118c": {
+      "workers": {
+        "app/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        },
+        "app/_not-found/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        },
+        "app/admin/upload/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "rsc",
+        "app/_not-found/page": "rsc",
+        "app/admin/upload/page": "rsc"
+      }
+    },
+    "7fe9fd02234a99a7b904c21a0f91f3bf4288f7d289": {
+      "workers": {
+        "app/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        },
+        "app/_not-found/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        },
+        "app/admin/upload/page": {
+          "moduleId": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fkeyless-actions.js%22%2C%5B%5B%227fa0d7c06306986df0d1bb38e9cb5aa9b4fa4f49cf%22%2C%22syncKeylessConfigAction%22%5D%2C%5B%227fa6256ea568749925d3629fe28f530cfacfa7118c%22%2C%22createOrReadKeylessAction%22%5D%2C%5B%227fe9fd02234a99a7b904c21a0f91f3bf4288f7d289%22%2C%22deleteKeylessAction%22%5D%5D%5D%5D&__client_imported__=!",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "rsc",
+        "app/_not-found/page": "rsc",
+        "app/admin/upload/page": "rsc"
+      }
+    },
+    "7fc9c2b963969ac58fbb1e99251bf228277f0e7adc": {
+      "workers": {
+        "app/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%5B%227fc9c2b963969ac58fbb1e99251bf228277f0e7adc%22%2C%22invalidateCacheAction%22%5D%5D%5D%5D&__client_imported__=true!",
+          "async": false
+        },
+        "app/_not-found/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%5B%227fc9c2b963969ac58fbb1e99251bf228277f0e7adc%22%2C%22invalidateCacheAction%22%5D%5D%5D%5D&__client_imported__=true!",
+          "async": false
+        },
+        "app/admin/upload/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fcort%2Fcoding%2Feasel-atelier%2Ffrontend%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%5B%227fc9c2b963969ac58fbb1e99251bf228277f0e7adc%22%2C%22invalidateCacheAction%22%5D%5D%5D%5D&__client_imported__=true!",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "action-browser",
+        "app/_not-found/page": "action-browser",
+        "app/admin/upload/page": "action-browser"
+      }
+    }
+  },
   "edge": {},
-  "encryptionKey": "qPcK7KIFMbRVVDtDf0Ibo4qJBu7J5B3h7X/kqcKZTVA="
+  "encryptionKey": "FQc3/V8bdw3r740uDopebU+T9fgUe+gGETnuxmf5fDg="
 }

@@ -6,9 +6,13 @@ import Frame from "./frame";
 import DynamicGrid from "../../scenes/dynamicGrid";
 import * as THREE from "three";
 
-const GOLDENRATIO = 1.61803398875;
+// const GOLDENRATIO = 1.61803398875;
 
-function getPosition(index, total, radius) {
+function getPosition(
+  index: number,
+  total: number,
+  radius: number
+): [number, number, number] {
   const phi = Math.acos(-1 + (2 * index) / total);
   const theta = Math.sqrt(total * Math.PI) * phi;
 
@@ -21,11 +25,24 @@ function getPosition(index, total, radius) {
   return [x, y, z];
 }
 
+interface FramesProps {
+  images: Array<{
+    url: string;
+    position?: [number, number, number];
+    rotation?: [number, number, number];
+    name?: string;
+    width?: number;
+    height?: number;
+  }>;
+  q?: THREE.Quaternion;
+  p?: THREE.Vector3;
+}
+
 export default function Frames({
   images,
   q = new THREE.Quaternion(),
   p = new THREE.Vector3(),
-}) {
+}: FramesProps) {
   const ref = useRef<THREE.Group>(null);
   const clicked = useRef<THREE.Object3D | null>(null);
 
@@ -33,16 +50,35 @@ export default function Frames({
   const [, setLocation] = useLocation();
 
   // Ensure frame positions are always defined
-  const framePositions = images.map((_, index) =>
-    getPosition(index, images.length, 5)
+  const framePositions = images.map(
+    (
+      image: {
+        url: string;
+        position?: [number, number, number];
+        rotation?: [number, number, number];
+        name?: string;
+        width?: number;
+        height?: number;
+      },
+      index: number
+    ) => getPosition(index, images.length, 5)
+  );
+
+  // Convert framePositions to THREE.Vector3 objects
+  const vector3FramePositions = framePositions.map(
+    (pos) => new THREE.Vector3(...pos)
   );
 
   useEffect(() => {
     if (!ref.current) return;
 
-    clicked.current = routeParams?.id
+    // Fix the type error by explicitly handling undefined case
+    const foundObject = routeParams?.id
       ? ref.current.getObjectByName(routeParams.id)
       : null;
+
+    // Ensure undefined becomes null
+    clicked.current = foundObject || null;
 
     if (clicked.current) {
       clicked.current.parent?.updateWorldMatrix(true, true);
@@ -70,7 +106,7 @@ export default function Frames({
 
   return (
     <>
-      <DynamicGrid framePositions={framePositions} />
+      <DynamicGrid framePositions={vector3FramePositions} />
       <group
         ref={ref}
         onClick={(e) => {

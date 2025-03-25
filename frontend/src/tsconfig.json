@@ -8,6 +8,7 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
+    "noImplicitAny": true, // Allow implicit 'any' types
     "strict": false,
     "noEmit": true,
     "incremental": true,

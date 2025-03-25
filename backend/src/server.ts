@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import { initClerk } from "./config/clerk";
 import routes from "./routes";
 import cors from "cors";
-import promptGeneration from "./routes/promptGeneration";
 // Load environment variables FIRST (must happen before any other code)
-dotenv.config();
 
 const app = express();
 const port = 8000;
@@ -15,7 +14,10 @@ app.use(express.json()); // parse incoming JSON requests
 // Add CORS middleware
 app.use(
   cors({
-    origin: "http://localhost:3000", // Your frontend URL
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL
+        : process.env.LOCAL_FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   })
 );
@@ -27,7 +29,18 @@ app.use(routes);
 
 // API enpoint
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// // // Start server
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
+// module.exports = app;
+
+// Only start the server if we're not being imported by Vercel
+// This check determines if this file is being run directly or imported
+if (process.env.NODE_ENV !== "production" || require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
+// export express app for vercel
+export default app;

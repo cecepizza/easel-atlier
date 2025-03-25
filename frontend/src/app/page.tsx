@@ -3,37 +3,36 @@
 import { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import EnvironmentSetup from "../scenes/environmentSetup";
-import useImages from "../hooks/useImages";
+import useImages from "../components/hooks/useImages";
 import Frames from "../components/artwork/allFrames";
-import Cityscape from "../scenes/dynamicGrid";
 
 const App = () => {
   const { images, loading } = useImages();
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
+  const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    setIsBrowser(true);
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading || !isBrowser) return <div>Loading...</div>;
+
+  // Transform images to have the correct type for position and rotation
+  const formattedImages = images.map((img) => ({
+    ...img,
+    position: img.position as [number, number, number],
+    rotation: img.rotation as [number, number, number],
+  }));
 
   return (
     <div className="h-screen w-full flex items-center justify-center">
       <Canvas
-        style={{ height: `${height}px`, width: `${width}px` }} // set canvas size to match window size
+        style={{ width: "100%", height: "100%" }}
         camera={{ fov: 70, position: [0, 2, 15] }}
         shadows
       >
         <EnvironmentSetup />
         <group position={[0, -1.5, 0]}>
-          <Frames images={images} />
+          <Frames images={formattedImages} />
         </group>
       </Canvas>
     </div>

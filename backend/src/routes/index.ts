@@ -20,14 +20,6 @@ const router = Router();
 // Configure multer for file uploads (5MB limit)
 const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 } });
 
-// Add cors middleware before your routes
-router.use(
-  cors({
-    origin: "http://localhost:3000", // Your frontend URL
-    credentials: true,
-  })
-);
-
 // PROTECTED ROUTE: Get user details
 router.get("/protected", requireAuth(), async (req: Request, res: Response) => {
   // Type assertion for auth object from Clerk
@@ -64,6 +56,25 @@ router.get("/test-aws", async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "AWS credentials not working",
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+});
+
+router.get("/test-db", async (req, res) => {
+  try {
+    // test prisma connection
+    const count = await prisma.artwork.count();
+    res.json({
+      success: true,
+      message: "DB connection successful",
+      artworkCount: count,
+    });
+  } catch (error) {
+    console.error("❌ DB connection failed:", error);
+    res.status(500).json({
+      success: false,
+      message: "DB connection failed",
       error: error instanceof Error ? error.message : String(error),
     });
   }
