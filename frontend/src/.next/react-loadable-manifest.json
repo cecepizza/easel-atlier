@@ -1,1 +1,22 @@
-{}
+{
+  "../node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js -> ./keyless-creator-reader.js": {
+    "id": 809,
+    "files": [
+      "static/chunks/809.645f93524015fe04.js"
+    ]
+  },
+  "../node_modules/@clerk/nextjs/dist/esm/app-router/client/keyless-cookie-sync.js -> ../keyless-actions.js": {
+    "id": 8170,
+    "files": [
+      "static/chunks/170.aac64690b189b9d9.js"
+    ]
+  },
+  "../node_modules/@react-three/drei/core/VideoTexture.js -> hls.js": {
+    "id": null,
+    "files": []
+  },
+  "../node_modules/@react-three/drei/web/FaceLandmarker.js -> @mediapipe/tasks-vision": {
+    "id": null,
+    "files": []
+  }
+}
