@@ -1,12 +1,12 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/admin/upload/page": "app/admin/upload/page.js",
   "/cancel/page": "app/cancel/page.js",
   "/configure/page": "app/configure/page.js",
-  "/page": "app/page.js",
+  "/preview/page": "app/preview/page.js",
   "/checkout/page": "app/checkout/page.js",
-  "/test-store/page": "app/test-store/page.js",
   "/success/page": "app/success/page.js",
-  "/preview/page": "app/preview/page.js"
+  "/test-store/page": "app/test-store/page.js",
+  "/page": "app/page.js"
 }
