@@ -29,8 +29,18 @@ app.use(routes);
 
 // API enpoint
 
-// // Start server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-module.exports = app;
+// // // Start server
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
+// module.exports = app;
+
+// Only start the server if we're not being imported by Vercel
+// This check determines if this file is being run directly or imported
+if (process.env.NODE_ENV !== "production" || require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
+// export express app for vercel
+export default app;
