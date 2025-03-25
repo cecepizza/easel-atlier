@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import { initClerk } from "./config/clerk";
 import routes from "./routes";
 import cors from "cors";
 // Load environment variables FIRST (must happen before any other code)
-dotenv.config();
 
 const app = express();
 const port = 8000;
@@ -14,7 +14,7 @@ app.use(express.json()); // parse incoming JSON requests
 // Add CORS middleware
 app.use(
   cors({
-    origin: "http://localhost:3000", // Your frontend URL
+    origin: process.env.FRONTEND_URL || "http://localhost:3000", // Your frontend URL
     credentials: true,
   })
 );
@@ -27,7 +27,7 @@ app.use(routes);
 // API enpoint
 
 // // Start server
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 module.exports = app;

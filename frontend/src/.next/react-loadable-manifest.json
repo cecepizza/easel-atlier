@@ -1,22 +1,22 @@
 {
   "../node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js -> ./keyless-creator-reader.js": {
-    "id": 809,
+    "id": "../node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js -> ./keyless-creator-reader.js",
     "files": [
-      "static/chunks/809.645f93524015fe04.js"
+      "static/chunks/_app-pages-browser_node_modules_clerk_nextjs_dist_esm_app-router_client_keyless-creator-reader_js.js"
     ]
   },
   "../node_modules/@clerk/nextjs/dist/esm/app-router/client/keyless-cookie-sync.js -> ../keyless-actions.js": {
-    "id": 8170,
+    "id": "../node_modules/@clerk/nextjs/dist/esm/app-router/client/keyless-cookie-sync.js -> ../keyless-actions.js",
     "files": [
-      "static/chunks/170.aac64690b189b9d9.js"
+      "static/chunks/_app-pages-browser_node_modules_clerk_nextjs_dist_esm_app-router_keyless-actions_js.js"
     ]
   },
   "../node_modules/@react-three/drei/core/VideoTexture.js -> hls.js": {
-    "id": null,
+    "id": "../node_modules/@react-three/drei/core/VideoTexture.js -> hls.js",
     "files": []
   },
   "../node_modules/@react-three/drei/web/FaceLandmarker.js -> @mediapipe/tasks-vision": {
-    "id": null,
+    "id": "../node_modules/@react-three/drei/web/FaceLandmarker.js -> @mediapipe/tasks-vision",
     "files": []
   }
 }
