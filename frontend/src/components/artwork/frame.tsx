@@ -108,6 +108,7 @@ const Frame = React.memo(function Frame({
         </mesh>
 
         <Image
+          ref={image}
           position={[0, 0, 0.7]}
           url={url}
           scale={imageScale}
