@@ -1,37 +1,44 @@
-// api/index.ts
+// api/db-test.ts
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import express, { Request, Response } from "express";
-import routes from "../src/routes/index"; // Your existing routes
-import cors from "cors";
+import { PrismaClient } from "@prisma/client";
 
-const app = express();
-app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    credentials: true,
-  })
-);
-
-// Use your existing routes
-app.use(routes);
+let prisma: PrismaClient | null = null;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // For simple health check, don't initialize the full app
-  if (req.url === "/") {
+  console.time("db-connection");
+  try {
+    // Log the database URL (first few characters only for security)
+    const dbUrlStart = process.env.DATABASE_URL?.substring(0, 20) + "...";
+    console.log("Connecting to database:", dbUrlStart);
+
+    // Initialize Prisma client
+    if (!prisma) {
+      console.log("Creating new Prisma client");
+      prisma = new PrismaClient();
+    } else {
+      console.log("Using existing Prisma client");
+    }
+
+    // Simple query to test connection
+    console.log("Executing count query...");
+    const count = await prisma.artwork.count();
+    console.timeEnd("db-connection");
+
     return res.status(200).json({
-      message: "API is working",
-      env: {
-        stripeKeyExists: !!process.env.STRIPE_SECRET_KEY,
-        awsKeyExists: !!process.env.AWS_ACCESS_KEY_ID,
-        databaseUrlExists: !!process.env.DATABASE_URL,
-      },
+      success: true,
+      message: "Database connection successful",
+      artworkCount: count,
+      connectionTime: "See function logs for timing",
+    });
+  } catch (error) {
+    console.error("Database connection error:", error);
+    console.timeEnd("db-connection");
+
+    return res.status(500).json({
+      success: false,
+      message: "Database connection failed",
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
     });
   }
-
-  return new Promise((resolve) => {
-    app(req as unknown as Request, res as unknown as Response, () =>
-      resolve(undefined)
-    );
-  });
 }
