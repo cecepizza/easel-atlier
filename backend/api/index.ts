@@ -1,11 +1,11 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
-
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  // Simple response to test if the function works
-  return res.status(200).json({
-    message: "API is working",
-    query: req.query,
-    method: req.method,
-    path: req.url,
+// api/index.ts
+export default function handler(req, res) {
+  console.log("Environment variable check:", {
+    stripeKeyExists: !!process.env.STRIPE_SECRET_KEY,
+    awsKeyExists: !!process.env.AWS_ACCESS_KEY_ID,
+    databaseUrlExists: !!process.env.DATABASE_URL,
+    // Don't log the actual values for security reasons
   });
+
+  // Rest of your handler code
 }
